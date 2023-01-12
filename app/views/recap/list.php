@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($report as $key => $rc) : ?>
+                <?php foreach ($report['data'] as $key => $rc) : ?>
                     <tr>
                         <td class="text-center text-bold"><?= $key + 1; ?></td>
                         <td class="text-center"><span class="text-secondary"><?= $rc['prefix']; ?></span><span class="text-bold"><?= $rc['nomor']; ?></span></td>

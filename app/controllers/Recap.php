@@ -2,11 +2,15 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Recap extends SELF_Controller
 {
+    private $limit, $page;
+
     public function __construct()
     {
         parent::__construct();
         $this->load->helper(['login', 'user', 'error', 'format', 'enkrip']);
         $this->load->model('Recap_model', 'recaps');
+        $this->limit = 10;
+        $this->page = 1;
     }
 
     public function index()
@@ -61,8 +65,20 @@ class Recap extends SELF_Controller
         $this->layout->script()->print();
     }
 
+    public function setup()
+    {
+    }
+
     public function b($param = null)
     {
+        $page_limit = $this->session->flashdata('page_limit');
+        $page_number = $this->session->flashdata('page_number');
+        if ($page_limit != null) {
+            $this->limit = $page_limit;
+        }
+        if ($page_number != null) {
+            $this->page = $page_number;
+        }
         if (special_access([1, 2])) {
             if ($param === null) {
                 custom_404_admin();
@@ -88,7 +104,8 @@ class Recap extends SELF_Controller
         $data['bread'] = 'Laporan,recap|' . $bread . '|List Blanko';
         $data['plugin'] = 'basic|fontawesome|scrollbar';
         $data['report'] = $this->recaps
-            ->list_between($asuransi->id, $number[0], $number[1])->get_data();
+            ->list_between($asuransi->id, $number[0], $number[1])
+            ->get_limit(0);
         $data['header'] = ($number[0] == $number[1]) ? $number[0] : $number[0] . ' - ' . $number[1];
         $this->layout->variable($data);
         $this->layout->content('recap/list');
