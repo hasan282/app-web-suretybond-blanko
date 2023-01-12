@@ -82,11 +82,14 @@ class Recap extends SELF_Controller
 
     private function _b_view($asuransi, $numbers)
     {
+        $bread = $asuransi->nickname . ',recap/ins/' . $asuransi->enkripsi;
         $number = explode('_and_', $numbers);
-        $data['title'] = 'List';
+        $data['title'] = 'List Blanko ' . $asuransi->nickname;
+        $data['bread'] = 'Laporan,recap|' . $bread . '|List Blanko';
         $data['plugin'] = 'basic|fontawesome|scrollbar';
         $data['report'] = $this->recaps
             ->list_between($asuransi->id, $number[0], $number[1])->get_data();
+        $data['header'] = ($number[0] == $number[1]) ? $number[0] : $number[0] . ' - ' . $number[1];
         $this->layout->variable($data);
         $this->layout->content('recap/list');
         $this->layout->script()->print();

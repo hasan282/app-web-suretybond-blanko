@@ -62,7 +62,6 @@ if ($result['numbers'] !== null) $total_blanko = sizeof(explode(',', $result['nu
         </div>
     </div>
 </div>
-
 <div class="mw-400 mx-auto">
     <div class="card">
         <div class="card-body">
@@ -73,8 +72,8 @@ if ($result['numbers'] !== null) $total_blanko = sizeof(explode(',', $result['nu
             </div>
             <div class="text-center zero-height" id="boxconfirm">
                 <p class="text-bold text-danger"><?= $total_blanko; ?> data Blanko akan dihapus, yakin hapus data?</p>
-                <a href="" class="btn btn-danger">Ya, Hapus Data</a>
-                <button class="btn btn-default" id="deletecancel">Jangan Hapus</button>
+                <a href="<?= base_url(str_replace('result', 'cancel', uri_string())); ?>" class="btn btn-danger text-bold mr-2"><i class="fas fa-trash-alt mr-2"></i>Ya, Hapus Data</a>
+                <button class="btn btn-default text-bold" id="deletecancel">Jangan Hapus</button>
             </div>
         </div>
     </div>
