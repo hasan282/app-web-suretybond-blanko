@@ -107,6 +107,7 @@ class Recap extends SELF_Controller
             ->list_between($asuransi->id, $number[0], $number[1])
             ->get_limit(0);
         $data['header'] = ($number[0] == $number[1]) ? $number[0] : $number[0] . ' - ' . $number[1];
+        $data['enkrip'] = $this->db->query("SELECT enkripsi FROM record_add WHERE id_asuransi = '" . $asuransi->id . "' AND (number_from = '" . $number[0] . "' OR number_to = '" . $number[1] . "' OR numbers LIKE '%" . $number[0] . "%')")->result_array();
         $this->layout->variable($data);
         $this->layout->content('recap/list');
         $this->layout->script()->print();

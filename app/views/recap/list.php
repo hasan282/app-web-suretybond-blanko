@@ -31,3 +31,10 @@
         </table>
     </div>
 </div>
+<?php if (!empty($enkrip)) {
+    foreach ($enkrip as $en) : ?>
+        <div class="text-center">
+            <a href="<?= base_url('result/add/' . $en['enkripsi']); ?>" class="btn btn-default btn-sm">Hasil Tambah</a>
+        </div>
+<?php endforeach;
+} ?>
