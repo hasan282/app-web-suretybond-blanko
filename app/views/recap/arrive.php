@@ -3,7 +3,7 @@ $query .= 'MIN(nomor) AS mins, MAX(nomor) AS maxs, SUM(CASE WHEN id_status = 1 T
 $query .= 'SUM(CASE WHEN id_status = 2 THEN 1 ELSE 0 END) AS used, SUM(CASE WHEN id_status = 3 OR id_status = 4 THEN 1 ELSE 0 END) AS crash ';
 $query .= 'FROM (SELECT @prev := 0) AS vars, (SELECT @group := 1) AS groups, (SELECT id, enkripsi, prefix, nomor, id_status, date_in AS date_sent, ';
 $query .= '(CASE WHEN (@prev - @prev := nomor) = -1 THEN @group ELSE @group := @group + 1 END) AS grps FROM blanko ';
-$query .= 'WHERE id_asuransi = ? ORDER BY nomor ASC) AS blankos GROUP BY grps, date_sent ORDER BY mins ASC';
+$query .= 'WHERE id_asuransi = ? ORDER BY nomor ASC) AS blankos GROUP BY grps, date_sent ORDER BY date_sent DESC';
 $recap_arrive = $this->db->query($query, $asuransi->id)->result_array(); ?>
 <div class="card">
     <div class="card-header">

@@ -33,7 +33,17 @@ class Recap extends SELF_Controller
         $this->layout->script()->print();
     }
 
+    public function in($param = null)
+    {
+        $this->_ins_process($param, 'recap/arrive');
+    }
+
     public function ins($param = null)
+    {
+        $this->_ins_process($param, 'report/per_office');
+    }
+
+    private function _ins_process($param, $view)
     {
         if (special_access([1, 2])) {
             if ($param === null) {
@@ -43,7 +53,7 @@ class Recap extends SELF_Controller
                 if ($asuransi === null) {
                     custom_404_admin();
                 } else {
-                    $this->_ins_view($asuransi);
+                    $this->_ins_view($asuransi, $view);
                 }
             }
         } else {
@@ -51,7 +61,7 @@ class Recap extends SELF_Controller
         }
     }
 
-    private function _ins_view($asuransi)
+    private function _ins_view($asuransi, $view)
     {
         $data['title'] = 'Rekap Blanko ' . $asuransi->nickname;
         $data['bread'] = 'Laporan,recap|Rekap ' . $asuransi->nickname;
@@ -60,8 +70,8 @@ class Recap extends SELF_Controller
         $data['report'] = $this->recaps->recap_office($asuransi->id)->get_data();
         $data['asuransi'] = $asuransi;
         $this->layout->variable($data);
-        $this->layout->content('report/per_office');
-        $this->layout->content('recap/arrive');
+        $this->layout->content('recap/switcher_in');
+        $this->layout->content($view);
         $this->layout->script()->print();
     }
 
