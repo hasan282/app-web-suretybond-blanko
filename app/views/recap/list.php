@@ -16,7 +16,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($report as $key => $rc) : ?>
+                <?php foreach ($report['data'] as $key => $rc) : ?>
                     <tr>
                         <td class="text-center text-bold"><?= $key + 1; ?></td>
                         <td class="text-center"><span class="text-secondary"><?= $rc['prefix']; ?></span><span class="text-bold"><?= $rc['nomor']; ?></span></td>
@@ -31,3 +31,10 @@
         </table>
     </div>
 </div>
+<?php if (!empty($enkrip)) {
+    foreach ($enkrip as $en) : ?>
+        <div class="text-center">
+            <a href="<?= base_url('result/add/' . $en['enkripsi']); ?>" class="btn btn-default btn-sm">Hasil Tambah</a>
+        </div>
+<?php endforeach;
+} ?>
