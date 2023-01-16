@@ -70,7 +70,8 @@ class Blanko extends CI_Controller
             $officedata = get_user_office($this->session->userdata('id'));
             $data['title'] = 'Detail Blanko';
             $data['plugin'] = 'basic|fontawesome|scrollbar';
-            $data['bread'] = 'Blanko List,blanko|Detail';
+            $breads = array('1' => '', '2' => '/used', '3' => '/crash', '4' => '/crash');
+            $data['bread'] = 'Blanko List,blanko' . $breads[$blanko_data['id_status']] . '|Detail';
             $data['blanko'] = $blanko_data;
             $data['true_office'] = ($blanko_data['id_office'] == $officedata->id);
             $this->load->view('template/head', $data);

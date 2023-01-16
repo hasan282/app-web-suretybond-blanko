@@ -67,6 +67,7 @@ class Blanko_new_model extends SELF_Model
         $queries .= 'WHERE blanko.id_status = 2';
         $conditions = array(
             'id' => ['blanko.enkripsi = ?', '?val?'],
+            'jaminan' => ['jaminan.enkripsi = ?', '?val?'],
             'office' => ['blanko.id_office = ?', '?val?'],
             'asuransi' => ['asuransi.enkripsi = ?', '?val?'],
             'nomor' => ['blanko.nomor LIKE ?', '%?val?%'],

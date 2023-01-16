@@ -151,6 +151,7 @@ class Recap extends SELF_Controller
         $data['params'] = $office . '_and_';
         $data['title'] = 'Rekap Blanko ' . $asuransi->nickname . ' - ' . $officedata->nickname;
         $data['plugin'] = 'basic|fontawesome|scrollbar';
+        $data['direct'] = 'report/list/' . $asuransi->enkripsi;
         $data['bread'] = $bread;
         $data['asuransi'] = $asuransi;
         $data['recap'] = array();

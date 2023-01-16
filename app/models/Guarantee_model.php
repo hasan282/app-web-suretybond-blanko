@@ -14,16 +14,23 @@ class Guarantee_model extends CI_Model
     {
         $fields = array(
             'id' => 'enkripsi AS id',
+            'real_id' => 'jaminan.id AS real_id',
+            'office' => 'principal.id_office AS office',
             'tipe' => 'tipe',
+            'tipe_id' => 'jaminan.id_tipe AS tipe_id',
             'tipe2' => 'symbol AS tipe2',
             'nomor' => 'nomor',
+            'principal_id' => 'principal.id AS principal_id',
             'principal' => 'principal.nama AS principal',
+            'obligee_id' => 'obligee.id AS obligee_id',
             'obligee' => 'obligee.nama AS obligee',
+            'currency_id' => 'jaminan.id_currency AS currency_id',
             'currency' => 'symbol_2 AS currency',
             'nilai' => 'nilai',
             'kontrak' => 'kontrak',
             'pekerjaan' => 'pekerjaan',
             'date' => 'apply_date AS date',
+            'date_to' => 'end_date AS date_to',
             'day' => 'apply_days AS day'
         );
         if (sizeof($selector) > 0) foreach (array_keys($fields) as $key) if (!in_array($key, $selector)) unset($fields[$key]);
@@ -38,6 +45,12 @@ class Guarantee_model extends CI_Model
     {
         $this->query .= ' WHERE jaminan.id = ?';
         return (array) $this->db->query($this->query, $id)->row();
+    }
+
+    public function where_enkrip($enkrip)
+    {
+        $this->query .= ' WHERE jaminan.enkripsi = ?';
+        return (array) $this->db->query($this->query, $enkrip)->row();
     }
 
     public function get_all()

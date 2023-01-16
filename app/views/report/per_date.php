@@ -45,10 +45,12 @@
         </table>
     </div>
 </div>
+<?php $uri_direct = str_replace('insurance', 'list', uri_string()) . '?var=';
+if (isset($direct)) $uri_direct = $direct . '?var='; ?>
 <script>
     $(function() {
         $('.tr-link').on('click', function() {
-            window.location.href = '<?= base_url(str_replace('insurance', 'list', uri_string()) . '?var='); ?>' + $(this).data('direct');
+            window.location.href = '<?= base_url($uri_direct); ?>' + $(this).data('direct');
         });
     });
 </script>
