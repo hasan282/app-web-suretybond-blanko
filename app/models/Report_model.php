@@ -13,6 +13,7 @@ class Report_model extends SELF_Model
             'id' => 'blanko.id AS id',
             'enkrip' => 'blanko.enkripsi AS enkrip',
             'enkrip_use' => 'blanko_used.enkripsi AS enkrip_use',
+            'asuransi' => 'asuransi.nama AS asuransi',
             'prefix' => 'blanko.prefix AS prefix',
             'nomor' => 'blanko.nomor AS nomor',
             'jaminan' => 'jaminan.nomor AS jaminan',
@@ -54,6 +55,7 @@ class Report_model extends SELF_Model
             'id' => ['blanko.enkripsi = ?', '_val_'],
             'nomor' => ['blanko.nomor LIKE ?', '%_val_%'],
             'office' => ['blanko.id_office = ?', '_val_'],
+            'jaminan' => ['jaminan.id = ?', '_val_'],
             'produksi' => ['blanko_used.produksi = ?', '_val_'],
             'asuransi' => ['asuransi.enkripsi = ?', '_val_'],
             'tipe' => ['jaminan_tipe.id = ?', '_val_']

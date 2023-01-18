@@ -33,8 +33,7 @@ class Edit extends CI_Controller
                 $jaminan = $this->guaranties->select()->where_enkrip($param);
             }
             if (!empty($jaminan) && $this->office['id'] == $jaminan['office']) {
-                var_dump($jaminan);
-                var_dump($this->office);
+                $this->_jaminan_view($jaminan);
             } else {
                 custom_404_admin();
             }
@@ -43,7 +42,24 @@ class Edit extends CI_Controller
         }
     }
 
-    private function _jaminan_view()
+    private function _jaminan_view($jaminan)
     {
+        $this->load->model('Report_model', 'reports');
+        $blankodata = $this->reports->used(
+            array('id', 'enkrip', 'asuransi', 'prefix', 'nomor', 'rev_status', 'color')
+        )->where(array('jaminan' => $jaminan['real_id']))->data();
+        $blankodata['status'] = $blankodata['rev_status'];
+        $data['title'] = 'Edit Data Jaminan';
+        $data['plugin'] = 'basic|fontawesome|scrollbar';
+        $data['bread'] = 'Blanko List,blanko/used|' . $blankodata['nomor'] . ',blanko/detail/' . $blankodata['enkrip'] . '|Edit Data';
+        $data['blanko'] = $blankodata;
+        $data['jaminan'] = $jaminan;
+        $this->load->view('template/head', $data);
+        $this->load->view('template/navbar');
+        $this->load->view('template/sidebar');
+        $this->load->view('blanko/detail');
+        $this->load->view('edit/jaminan');
+        $this->load->view('template/footer');
+        $this->load->view('template/foot');
     }
 }
