@@ -65,7 +65,11 @@ class User extends CI_Controller
     public function add()
     {
         if (special_access(1)) {
-            $this->_add_view();
+            if (empty($_POST)) {
+                $this->_add_view();
+            } else {
+                $this->_add_process();
+            }
         } else {
             custom_404_admin();
         }
@@ -82,6 +86,11 @@ class User extends CI_Controller
         $this->load->view('user/add_form');
         $this->load->view('template/footer');
         $this->load->view('template/foot');
+    }
+
+    private function _add_process()
+    {
+        var_dump($_POST);
     }
 
     public function logout()
