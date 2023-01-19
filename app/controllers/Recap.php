@@ -108,7 +108,7 @@ class Recap extends SELF_Controller
 
     private function _b_view($asuransi, $numbers)
     {
-        $bread = $asuransi->nickname . ',recap/ins/' . $asuransi->enkripsi;
+        $bread = $asuransi->nickname . ',recap/in/' . $asuransi->enkripsi;
         $number = explode('_and_', $numbers);
         $data['title'] = 'List Blanko ' . $asuransi->nickname;
         $data['bread'] = 'Laporan,recap|' . $bread . '|List Blanko';

@@ -1,7 +1,7 @@
 <form action="<?= base_url(uri_string()) ?>" method="POST">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Blanko Terpakai</h3>
+            <h3 class="card-title">Blanko Terpakai <span class="text-bold text-olive"><?= $blankodata['page']; ?></span> Data</h3>
         </div>
         <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap">
@@ -21,7 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($blankodata as $bd) : ?>
+                    <?php foreach ($blankodata['data'] as $bd) : ?>
                         <tr>
                             <td class="py-0 text-center align-middle">
                                 <div class="icheck-primary">

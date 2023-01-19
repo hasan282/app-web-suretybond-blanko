@@ -2,11 +2,17 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Production extends SELF_Controller
 {
+    private $limit, $page;
+
     public function __construct()
     {
         parent::__construct();
         $this->load->helper(['login', 'error', 'user', 'format', 'id', 'enkrip']);
         $this->load->model('Report_model', 'report');
+        $page_limit = $this->session->flashdata('page_limit');
+        $page_number = $this->session->flashdata('page_number');
+        $this->limit = ($page_limit == null) ? 10 : $page_limit;
+        $this->page = ($page_number == null) ? 1 : $page_number;
     }
 
     public function index()
@@ -27,10 +33,14 @@ class Production extends SELF_Controller
     private function _index_view()
     {
         $selected = array('enkrip_use', 'prefix', 'nomor', 'jaminan', 'principal', 'office_nick', 'rev_status', 'color');
+        $blankos = $this->report->used($selected)->wheres('blanko_used.produksi IS NULL')->order(['used']);
         $data['title'] = 'Produksi';
         $data['plugin'] = 'basic|fontawesome|scrollbar|icheck';
-        $data['blankodata'] = $this->report->used($selected)
-            ->wheres('blanko_used.produksi IS NULL')->order(['used'])->data_list();
+        $data['pagination'] = array('limit' => $this->limit, 'page' => $this->page, 'offset' => ($this->page - 1) * $this->limit);
+        $data['blankodata'] = array(
+            'page' => $blankos->count(),
+            'data' => $blankos->limit($data['pagination']['limit'], $data['pagination']['offset'])->data_list()
+        );
         $data['jscript'] = 'functions/check|produksi/main';
         $this->layout->variable($data);
         $this->layout->content('produksi/buttons');
@@ -82,8 +92,12 @@ class Production extends SELF_Controller
         $data['bread'] = 'Produksi,production|Laporan Bulanan';
         $data['report'] = $this->_report_data($month);
         $this->layout->variable($data);
-        $this->layout->content('produksi/selector');
-        $this->layout->content('produksi/table');
+        if (empty($data['report']['list'])) {
+            $this->layout->content('produksi/null');
+        } else {
+            $this->layout->content('produksi/selector');
+            $this->layout->content('produksi/table');
+        }
         $this->layout->script()->print();
     }
 
@@ -100,5 +114,12 @@ class Production extends SELF_Controller
             $report = $this->report->used()->where(array('produksi' => $select))->order(array('asuransi', 'used'))->data_list();
         }
         return array('list' => $month, 'report' => $report, 'select' => $select);
+    }
+
+    public function setlist($limit, $number)
+    {
+        $this->session->set_flashdata('page_limit', $limit);
+        $this->session->set_flashdata('page_number', $number);
+        redirect($this->input->get('log'));
     }
 }
