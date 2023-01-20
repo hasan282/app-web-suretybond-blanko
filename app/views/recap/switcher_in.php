@@ -4,8 +4,8 @@
             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <?php $uri_string = explode('/', uri_string());
                 $switcher = array(
-                    ['value' => 'ins', 'id' => 'v_ins', 'icon' => 'fas fa-user-friends', 'text' => 'Subagen'],
-                    ['value' => 'in', 'id' => 'v_in', 'icon' => 'fas fa-calendar-alt', 'text' => 'Tanggal Masuk']
+                    ['value' => 'in', 'id' => 'v_in', 'icon' => 'fas fa-calendar-alt', 'text' => 'Tanggal Masuk'],
+                    ['value' => 'ins', 'id' => 'v_ins', 'icon' => 'fas fa-user-friends', 'text' => 'Subagen']
                 );
                 foreach ($switcher as $sw) :
                     $is_active = ($sw['value'] == $uri_string[1]); ?>

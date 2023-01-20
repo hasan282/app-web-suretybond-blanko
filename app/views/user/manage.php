@@ -1,5 +1,13 @@
-<?php $password_default = 'jasmine';
-$password_enkrip = self_md5($password_default); ?>
+<?php $password_default = $this->db->get_where('reference', array('ref' => 'password'))->row();
+$password_enkrip = self_md5($password_default->vals); ?>
+<div class="card">
+    <div class="card-body row">
+        <div class="col"></div>
+        <div class="col text-center text-md-right">
+            <a href="<?= base_url('user/add'); ?>" class="btn btn-primary text-bold"><i class="fas fa-plus-square mr-3"></i>Tambah Data User</a>
+        </div>
+    </div>
+</div>
 <div class="card">
     <div class="card-header">
         <h3 class="card-title">Data User</h3>
@@ -45,7 +53,4 @@ $password_enkrip = self_md5($password_default); ?>
             </tbody>
         </table>
     </div>
-</div>
-<div>
-    <a href="<?= base_url('user/add'); ?>" class="btn btn-primary text-bold"><i class="fas fa-plus-square mr-3"></i>Tambah Data User</a>
 </div>

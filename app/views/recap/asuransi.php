@@ -48,7 +48,7 @@
 <script>
     $(function() {
         $('.tr-link').on('click', function() {
-            window.location.href = '<?= base_url('recap/ins/'); ?>' + $(this).data('direct');
+            window.location.href = '<?= base_url('recap/in/'); ?>' + $(this).data('direct');
         });
     });
 </script>

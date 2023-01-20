@@ -11,6 +11,7 @@
                     <th class="text-center border-right">Status</th>
                     <th>Nomor Jaminan</th>
                     <th>Principal</th>
+                    <th class="text-center border-left">Produksi</th>
                     <th class="text-center border-left"><i class="fas fa-cog"></i></th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                         <td class="text-center border-right text-bold text-<?= $rc['color']; ?>"><?= $rc['status']; ?></td>
                         <td class="border-right"><?= ($rc['jaminan'] === null) ? '-' : $rc['jaminan']; ?></td>
                         <td><?= ($rc['principal'] === null) ? '-' : $rc['principal']; ?></td>
+                        <td class="text-center border-left"><?= ($rc['produksi'] === null) ? '-' : format_date($rc['produksi'] . '-01', 'MM2 YY2'); ?></td>
                         <td class="text-center py-0 align-middle border-left"><a href="<?= base_url('blanko/detail/' . $rc['id']); ?>" class="btn btn-info text-bold btn-sm"><i class="fas fa-info-circle mr-2"></i>Detail</a></td>
                     </tr>
                 <?php endforeach; ?>

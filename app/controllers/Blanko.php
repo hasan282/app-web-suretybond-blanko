@@ -9,7 +9,7 @@ class Blanko extends CI_Controller
         parent::__construct();
         $this->load->library('Plugin_library', null, 'plugin');
         $this->load->library('form_validation');
-        $this->load->helper(['login', 'user', 'error', 'id', 'enkrip']);
+        $this->load->helper(['login', 'user', 'error', 'id', 'enkrip', 'format']);
     }
 
     public function index()
@@ -81,12 +81,11 @@ class Blanko extends CI_Controller
             if ($blanko_data['id_jaminan'] != null) {
                 $this->load->model('Guarantee_model', 'guaranties');
                 $data['jaminan'] = $this->guaranties->select()->where_id($blanko_data['id_jaminan']);
-                if (!empty($data['jaminan'])) {
-                    $this->load->view('blanko/detail_used', $data);
-                    $this->load->view('produksi/detail');
-                }
+                if (!empty($data['jaminan'])) $this->load->view('blanko/detail_used', $data);
             }
             if ($blanko_data['id_crash'] != null) $this->load->view('blanko/detail_crash');
+            if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
+                $this->load->view('produksi/detail');
             if ($blanko_data['id_office'] == $officedata->id) $this->load->view('blanko/detail_buttons');
             $this->load->view('template/footer');
             $this->load->view('template/foot');
