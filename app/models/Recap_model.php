@@ -66,6 +66,7 @@ class Recap_model extends CI_Model
             'principal' => 'principal.nama AS principal',
             'obligee' => 'obligee.nama AS obligee',
             'nilai' => 'nilai',
+            'produksi' => 'produksi',
             'tanggal' => 'apply_date AS tanggal',
             'tanggal_to' => 'end_date AS tanggal_to',
             'days' => 'apply_days AS days'

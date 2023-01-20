@@ -64,8 +64,13 @@ class User extends CI_Controller
 
     public function add()
     {
+        $this->load->library('form_validation', null, 'forms');
         if (special_access(1)) {
-            if (empty($_POST)) {
+            $this->forms->set_rules('in_nama', 'Nama', 'required');
+            $this->forms->set_rules('in_username', 'Username', 'required|regex_match[/^[a-z0-9]*$/]');
+            $this->forms->set_rules('in_role', 'Role', 'required');
+            $this->forms->set_rules('in_office', 'Kantor', 'required');
+            if ($this->forms->run() === false) {
                 $this->_add_view();
             } else {
                 $this->_add_process();
@@ -90,7 +95,25 @@ class User extends CI_Controller
 
     private function _add_process()
     {
-        var_dump($_POST);
+        $password = $this->db->get_where('reference', array('ref' => 'password'))->row();
+        $userdata = array(
+            'id' => date('ymdHis'),
+            'username' => $this->input->post('in_username'),
+            'password' => self_md5($password->vals),
+            'nama' => $this->input->post('in_nama'),
+            'photo' => $this->input->post('in_photo'),
+            'id_office' => $this->input->post('in_office'),
+            'id_access' => intval($this->input->post('in_role')),
+            'is_active' => 1
+        );
+        $userdata['enkripsi'] = self_md5($userdata['id']);
+        if ($this->db->insert('user', $userdata)) {
+            // success
+            redirect('user/manage');
+        } else {
+            // failed
+            redirect('user/manage');
+        }
     }
 
     public function logout()

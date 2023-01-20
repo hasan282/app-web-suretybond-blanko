@@ -184,7 +184,7 @@ class Report extends CI_Controller
         $officedata = $this->db->get_where('office', ['id' => $office])->row();
         $fields = [];
         if (!$get_all) {
-            $fields = array('id', 'prefix', 'nomor', 'status', 'color', 'jaminan', 'principal');
+            $fields = array('id', 'prefix', 'nomor', 'status', 'color', 'jaminan', 'principal', 'produksi');
         }
         if ($admin) {
             $query_string = '?var=' . urlencode(self_encrypt($office));
