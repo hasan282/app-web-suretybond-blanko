@@ -25,14 +25,14 @@
                         <tr>
                             <td class="py-0 text-center align-middle">
                                 <div class="icheck-primary">
-                                    <input type="checkbox" class="checkone" name="check_<?= $bd['enkrip_use']; ?>" id="check_<?= $bd['enkrip_use']; ?>">
-                                    <label for="check_<?= $bd['enkrip_use']; ?>"></label>
+                                    <input type="checkbox" class="checkone" name="check_<?= $bd['enkripsi']; ?>" id="check_<?= $bd['enkripsi']; ?>">
+                                    <label for="check_<?= $bd['enkripsi']; ?>"></label>
                                 </div>
                             </td>
                             <td class="text-center"><span class="text-secondary"><?= $bd['prefix']; ?></span><span class="text-bold"><?= $bd['nomor']; ?></span></td>
-                            <td class="text-center border-right text-bold text-<?= $bd['color']; ?>"><?= $bd['rev_status']; ?></td>
-                            <td class="border-right"><?= $bd['jaminan']; ?></td>
-                            <td><?= $bd['principal']; ?></td>
+                            <td class="text-center border-right text-bold text-<?= $bd['color']; ?>"><?= $bd['status']; ?></td>
+                            <td class="border-right"><?= ($bd['jaminan'] == null) ? '-' : $bd['jaminan']; ?></td>
+                            <td><?= ($bd['principal'] == null) ? '-' : $bd['principal']; ?></td>
                             <td class="text-center border-left text-bold"><?= $bd['office_nick']; ?></td>
                         </tr>
                     <?php endforeach; ?>

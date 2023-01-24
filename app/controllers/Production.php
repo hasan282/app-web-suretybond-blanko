@@ -9,6 +9,7 @@ class Production extends SELF_Controller
         parent::__construct();
         $this->load->helper(['login', 'error', 'user', 'format', 'id', 'enkrip']);
         $this->load->model('Report_model', 'report');
+        $this->load->model('Production_model', 'production');
         $page_limit = $this->session->flashdata('page_limit');
         $page_number = $this->session->flashdata('page_number');
         $this->limit = ($page_limit == null) ? 10 : $page_limit;
@@ -32,8 +33,7 @@ class Production extends SELF_Controller
 
     private function _index_view()
     {
-        $selected = array('enkrip_use', 'prefix', 'nomor', 'jaminan', 'principal', 'office_nick', 'rev_status', 'color');
-        $blankos = $this->report->used($selected)->wheres('blanko_used.produksi IS NULL')->order(['used']);
+        $blankos = $this->production->select()->where(null)->order();
         $data['title'] = 'Produksi';
         $data['plugin'] = 'basic|fontawesome|scrollbar|icheck';
         $data['pagination'] = array('limit' => $this->limit, 'page' => $this->page, 'offset' => ($this->page - 1) * $this->limit);
@@ -58,7 +58,7 @@ class Production extends SELF_Controller
                 array_push($usedlist, "'" . str_replace($pref, '', $key) . "'");
             }
         }
-        $query = 'UPDATE blanko_used SET produksi = ? WHERE enkripsi IN (' . implode(', ', $usedlist) . ')';
+        $query = 'UPDATE blanko SET laprod = ? WHERE enkripsi IN (' . implode(', ', $usedlist) . ')';
         $result = $this->db->query($query, $month);
 
         redirect('production');
@@ -107,11 +107,11 @@ class Production extends SELF_Controller
         $month = array();
         $report = array();
         $select = null;
-        $monthdata = $this->db->query('SELECT produksi FROM blanko_used WHERE produksi IS NOT NULL GROUP BY produksi ORDER BY produksi DESC')->result_array();
-        if (!empty($monthdata)) foreach ($monthdata as $md) array_push($month, $md['produksi']);
+        $monthdata = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NULL GROUP BY laprod ORDER BY laprod DESC')->result_array();
+        if (!empty($monthdata)) foreach ($monthdata as $md) array_push($month, $md['laprod']);
         if (!empty($month)) {
             $select = (in_array($param, $month)) ? $param : $month[0];
-            $report = $this->report->used()->where(array('produksi' => $select))->order(array('asuransi', 'used'))->data_list();
+            $report = $this->production->select()->where($select)->order()->data_list();
         }
         return array('list' => $month, 'report' => $report, 'select' => $select);
     }
@@ -121,5 +121,17 @@ class Production extends SELF_Controller
         $this->session->set_flashdata('page_limit', $limit);
         $this->session->set_flashdata('page_number', $number);
         redirect($this->input->get('log'));
+    }
+
+    public function setuptheproduction()
+    {
+        $result = array();
+        $produksi = $this->db->query('SELECT id_blanko, produksi FROM blanko_used WHERE produksi IS NOT NULL')->result_array();
+        foreach ($produksi as $pr) {
+            if ($this->db->update('blanko', array('laprod' => $pr['produksi']), array('id' => $pr['id_blanko']))) {
+                array_push($result, $pr);
+            }
+        }
+        var_dump($result);
     }
 }

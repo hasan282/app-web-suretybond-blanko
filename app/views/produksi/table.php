@@ -20,7 +20,7 @@
                     <tr>
                         <td class="text-center text-bold"><?= $num + 1; ?></td>
                         <td class="text-center"><span class="text-secondary"><?= $rp['prefix']; ?></span><span class="text-bold"><?= $rp['nomor']; ?></span></td>
-                        <td class="text-center"><?= $rp['rev_status']; ?></td>
+                        <td class="text-center"><?= $rp['status']; ?></td>
                         <td><?= $rp['jaminan']; ?></td>
                         <td><?= $rp['principal']; ?></td>
                         <td class="text-center"><?= $rp['office_nick']; ?></td>
