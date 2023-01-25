@@ -66,14 +66,14 @@ class Recap_model extends CI_Model
             'principal' => 'principal.nama AS principal',
             'obligee' => 'obligee.nama AS obligee',
             'nilai' => 'nilai',
-            'produksi' => 'produksi',
+            'produksi' => 'blankos.laprod AS produksi',
             'tanggal' => 'apply_date AS tanggal',
             'tanggal_to' => 'end_date AS tanggal_to',
             'days' => 'apply_days AS days'
         );
         if (sizeof($selector) > 0) foreach (array_keys($fields) as $key) if (!in_array($key, $selector)) unset($fields[$key]);
-        $core_table = 'SELECT enkripsi AS id, blanko.id AS real_id, id_asuransi, id_office, prefix, nomor, id_status, blanko_sent.date AS tanggal, keterangan FROM blanko INNER JOIN blanko_sent ON blanko.id = blanko_sent.id_blanko AND blanko.id_office = blanko_sent.office_to';
-        if ($head_office) $core_table = 'SELECT enkripsi AS id, id AS real_id, id_asuransi, id_office, prefix, nomor, id_status, date_in AS tanggal, keterangan FROM blanko';
+        $core_table = 'SELECT enkripsi AS id, blanko.id AS real_id, id_asuransi, id_office, prefix, nomor, laprod, id_status, blanko_sent.date AS tanggal, keterangan FROM blanko INNER JOIN blanko_sent ON blanko.id = blanko_sent.id_blanko AND blanko.id_office = blanko_sent.office_to';
+        if ($head_office) $core_table = 'SELECT enkripsi AS id, id AS real_id, id_asuransi, id_office, prefix, nomor, laprod, id_status, date_in AS tanggal, keterangan FROM blanko';
         $queries = 'SELECT ' . implode(', ', array_values($fields)) . ' FROM ((((((' . $core_table . ') AS blankos LEFT JOIN blanko_used ON blankos.real_id = blanko_used.id_blanko) ';
         $queries .= 'LEFT JOIN jaminan ON blanko_used.id_jaminan = jaminan.id) LEFT JOIN jaminan_tipe ON jaminan.id_tipe = jaminan_tipe.id) ';
         $queries .= 'INNER JOIN blanko_status ON blankos.id_status = blanko_status.id) LEFT JOIN principal ON jaminan.id_principal = principal.id) LEFT JOIN obligee ON jaminan.id_obligee = obligee.id ';
@@ -86,7 +86,7 @@ class Recap_model extends CI_Model
     {
         $binds = array($asuransi, $from);
         array_push($binds, ($to === null) ? $from : $to);
-        $fields = 'blanko.enkripsi AS id, blanko.prefix AS prefix, blanko.nomor AS nomor, blanko_status.status AS status, blanko_status.color_class AS color, jaminan.nomor AS jaminan, principal.nama AS principal, office.nickname AS office, blanko_used.produksi AS produksi';
+        $fields = 'blanko.enkripsi AS id, blanko.prefix AS prefix, blanko.nomor AS nomor, blanko_status.status AS status, blanko_status.color_class AS color, jaminan.nomor AS jaminan, principal.nama AS principal, office.nickname AS office, blanko.laprod AS produksi';
         $queries = 'SELECT ' . $fields . ' FROM ((((blanko INNER JOIN blanko_status ON blanko.id_status = blanko_status.id) INNER JOIN office ON blanko.id_office = office.id) LEFT OUTER JOIN blanko_used ON blanko.id = blanko_used.id_blanko) LEFT OUTER JOIN jaminan ON blanko_used.id_jaminan = jaminan.id) LEFT OUTER JOIN principal ON jaminan.id_principal = principal.id';
         $queries .= ' WHERE blanko.id_asuransi = ? AND blanko.nomor BETWEEN ? AND ? ORDER BY blanko.nomor ASC';
         $this->binds = $binds;

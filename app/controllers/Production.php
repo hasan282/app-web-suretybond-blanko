@@ -103,7 +103,6 @@ class Production extends SELF_Controller
 
     private function _report_data($param)
     {
-        $fields = array('enkrip', 'prefix', 'nomor', 'jaminan', 'jaminan_tipe_2', 'principal', 'obligee', 'kontrak', 'pekerjaan', 'currency_2', 'jaminan_nilai', 'date_from', 'date_to', 'days');
         $month = array();
         $report = array();
         $select = null;
@@ -123,15 +122,19 @@ class Production extends SELF_Controller
         redirect($this->input->get('log'));
     }
 
-    public function setuptheproduction()
+    public function setmonth()
     {
-        $result = array();
-        $produksi = $this->db->query('SELECT id_blanko, produksi FROM blanko_used WHERE produksi IS NOT NULL')->result_array();
-        foreach ($produksi as $pr) {
-            if ($this->db->update('blanko', array('laprod' => $pr['produksi']), array('id' => $pr['id_blanko']))) {
-                array_push($result, $pr);
+        $blanko = $this->input->post('blanko');
+        $month = $this->input->post('month');
+        if (true_access('production')) {
+            if (empty($_POST) || $blanko == '' || $month == '') {
+                custom_404_admin();
+            } else {
+                $this->db->update('blanko', array('laprod' => $month), array('enkripsi' => $blanko));
+                redirect('blanko/detail/' . $blanko);
             }
+        } else {
+            custom_404_admin();
         }
-        var_dump($result);
     }
 }
