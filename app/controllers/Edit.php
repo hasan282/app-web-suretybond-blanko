@@ -33,7 +33,11 @@ class Edit extends CI_Controller
                 $jaminan = $this->guaranties->select()->where_enkrip($param);
             }
             if (!empty($jaminan) && $this->office['id'] == $jaminan['office']) {
-                $this->_jaminan_view($jaminan);
+                if (empty($_POST)) {
+                    $this->_jaminan_view($jaminan);
+                } else {
+                    var_dump($_POST);
+                }
             } else {
                 custom_404_admin();
             }
@@ -50,8 +54,9 @@ class Edit extends CI_Controller
         )->where(array('jaminan' => $jaminan['real_id']))->data();
         $blankodata['status'] = $blankodata['rev_status'];
         $data['title'] = 'Edit Data Jaminan';
-        $data['plugin'] = 'basic|fontawesome|scrollbar';
+        $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput';
         $data['bread'] = 'Blanko List,blanko/used|' . $blankodata['nomor'] . ',blanko/detail/' . $blankodata['enkrip'] . '|Edit Data';
+        $data['jscript'] = 'process/used.min';
         $data['blanko'] = $blankodata;
         $data['jaminan'] = $jaminan;
         $this->load->view('template/head', $data);

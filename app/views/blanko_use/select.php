@@ -2,8 +2,15 @@
     <div class="card">
         <div class="card-header">Gunakan Untuk Sendiri</div>
         <div class="card-body text-center">
-            <h5 class="mb-4"><?= $office->nama; ?></h5>
-            <a href="<?= base_url('process/used'); ?>" class="btn btn-primary text-bold"><i class="fas fa-print mr-2"></i>Gunakan Blanko</a>
+            <h5 class="font-poppins text-dark"><?= $office->nama; ?></h5>
+            <div class="row">
+                <div class="col-md text-center text-md-right pt-3">
+                    <a href="<?= base_url('process/used'); ?>" class="btn btn-primary text-bold"><i class="fas fa-print mr-2"></i>Gunakan Blanko Baru</a>
+                </div>
+                <div class="col-md text-center text-md-left pt-3">
+                    <a href="<?= base_url('revision'); ?>" class="btn btn-secondary text-bold"><i class="fas fa-sync-alt mr-2"></i>Revisi Blanko Terpakai</a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="card">
