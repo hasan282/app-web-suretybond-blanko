@@ -7,7 +7,7 @@ class Revision extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $config = array('new_line_remove' => false);
+        $config = array('new_line_remove' => true);
         $this->load->library('Layout_library', $config, 'layout');
         $this->load->library('Plugin_library', null, 'plugin');
         $this->load->helper(['login', 'error', 'user', 'enkrip']);
@@ -44,7 +44,7 @@ class Revision extends CI_Controller
                     !empty($this->blankodata) &&
                     $this->blankodata['office'] == $this->office->id
                 ) {
-                    $this->_revision_view();
+                    $this->_revision_view($param);
                 } else {
                     custom_404_admin();
                 }
@@ -97,12 +97,14 @@ class Revision extends CI_Controller
         }
     }
 
-    private function _revision_view()
+    private function _revision_view($param)
     {
         $data['title'] = 'Revisi Blanko';
-        $data['bread'] = 'Blanko Terpakai,blanko/used|Revisi';
+        $breads = $this->blankodata['nomor'] . ',blanko/detail/' . $param;
+        $data['bread'] = 'Blanko Terpakai,blanko/used|' . $breads . '|Revisi';
         $data['plugin'] = 'basic|fontawesome|scrollbar';
         $data['blanko'] = $this->blankodata;
+        $data['params'] = $param;
         $data['jscript'] = 'functions/table.min|blanko/revision';
         $this->layout->variable($data);
         $this->layout->row(array([
@@ -117,7 +119,8 @@ class Revision extends CI_Controller
     {
         $this->load->model('Guarantee_model', 'guaranties');
         $data['title'] = 'Gunakan Untuk Revisi';
-        $data['bread'] = 'Terpakai,blanko/used|Revisi ' . $this->blankodata['nomor'] . ',revision/b/' . $param . '|Gunakan';
+        $breads = $this->blankodata['nomor'] . ',blanko/detail/' . $param . '|Revisi,revision/b/' . $param;
+        $data['bread'] = 'Terpakai,blanko/used|' . $breads . '|Gunakan';
         $data['plugin'] = 'basic|fontawesome|scrollbar|fileinput|dateinput';
         $data['blanko'] = $blanko_data;
         $data['blanko']['old'] = $this->blankodata;

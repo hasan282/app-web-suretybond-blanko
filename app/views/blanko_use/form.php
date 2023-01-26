@@ -130,7 +130,7 @@ foreach ($principal as $pr) $princ_data['NUM' . $pr['num']] = $pr['nama'];
 foreach ($obligee as $ob) $obli_data['NUM' . $ob['num']] = $ob['nama']; ?>
 <script>
     const data_select = {
-        'principal': JSON.parse('<?= str_replace("'", "\'", json_encode($princ_data)); ?>'),
-        'obligee': JSON.parse('<?= str_replace("'", "\'", json_encode($obli_data)); ?>')
+        "principal": <?= json_encode($princ_data); ?>,
+        "obligee": <?= json_encode($obli_data); ?>
     };
 </script>

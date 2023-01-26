@@ -74,21 +74,41 @@ class Blanko extends CI_Controller
             $data['bread'] = 'Blanko List,blanko' . $breads[$blanko_data['id_status']] . '|Detail';
             $data['blanko'] = $blanko_data;
             $data['true_office'] = ($blanko_data['id_office'] == $officedata->id);
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            $this->load->view('blanko/detail');
+            $config = array('new_line_remove' => true);
+            $this->load->library('Layout_library', $config, 'layout');
+            $this->layout->variable($data);
+            $this->layout->content('blanko/detail');
             if ($blanko_data['id_jaminan'] != null) {
                 $this->load->model('Guarantee_model', 'guaranties');
                 $data['jaminan'] = $this->guaranties->select()->where_id($blanko_data['id_jaminan']);
-                if (!empty($data['jaminan'])) $this->load->view('blanko/detail_used', $data);
+                if (!empty($data['jaminan'])) {
+                    $this->layout->variable($data);
+                    $this->layout->content('blanko/detail_used');
+                }
             }
-            if ($blanko_data['id_crash'] != null) $this->load->view('blanko/detail_crash');
+            if ($blanko_data['id_crash'] != null)
+                $this->layout->content('blanko/detail_crash');
             if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
-                $this->load->view('produksi/detail');
-            if ($blanko_data['id_office'] == $officedata->id) $this->load->view('blanko/detail_buttons');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+                $this->layout->content('produksi/detail');
+            if ($blanko_data['id_office'] == $officedata->id)
+                $this->layout->content('blanko/detail_buttons');
+            $this->layout->script()->print();
+            // $this->load->view('template/head', $data);
+            // $this->load->view('template/navbar');
+            // $this->load->view('template/sidebar');
+            // $this->load->view('blanko/detail');
+            // if ($blanko_data['id_jaminan'] != null) {
+            //     $this->load->model('Guarantee_model', 'guaranties');
+            //     $data['jaminan'] = $this->guaranties->select()->where_id($blanko_data['id_jaminan']);
+            //     if (!empty($data['jaminan'])) $this->load->view('blanko/detail_used', $data);
+            // }
+            // if ($blanko_data['id_crash'] != null)
+            //     $this->load->view('blanko/detail_crash');
+            // if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
+            //     $this->load->view('produksi/detail');
+            // if ($blanko_data['id_office'] == $officedata->id) $this->load->view('blanko/detail_buttons');
+            // $this->load->view('template/footer');
+            // $this->load->view('template/foot');
         }
     }
 
@@ -180,7 +200,7 @@ class Blanko extends CI_Controller
             $blanko['id_office'] = $office->id;
             $blanko['id_status'] = 1;
             $blanko['date_in'] = $this->input->post('tanggal');
-            $blanko['keterangan'] = $this->input->post('keterangan');
+            $blanko['keterangan'] = trim($this->input->post('keterangan'));
             foreach ($blanko as $k => $v) if ($v == '') unset($blanko[$k]);
             array_push($data_blanko, $blanko);
         }

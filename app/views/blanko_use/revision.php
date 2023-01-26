@@ -24,7 +24,8 @@ $guarantee = array(
     'val_tanggal_to' => ['val', $jaminan->end_date, 'input'],
     'tanggal_to_input' => ['val', $jaminan->end_date, 'input'],
     'days' => ['val', $jaminan->apply_days, 'keyup']
-); ?>
+);
+foreach ($guarantee as $key => $gr) $guarantee[$key][1] = trim($gr[1]); ?>
 <script>
-    const jaminandata = JSON.parse('<?= str_replace("'", "\'", json_encode($guarantee)); ?>');
+    const jaminandata = <?= json_encode($guarantee); ?>;
 </script>

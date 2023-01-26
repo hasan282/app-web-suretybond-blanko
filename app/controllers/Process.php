@@ -159,13 +159,13 @@ class Process extends CI_Controller
         $jaminan_data = array(
             'id' => date('ymdHis') . mt_rand(1000, 9999),
             'id_tipe' => $this->input->post('jenis'),
-            'nomor' => $this->input->post('jaminan_num'),
+            'nomor' => trim($this->input->post('jaminan_num')),
             'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
             'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
             'id_currency' => $this->input->post('currency'),
             'nilai' => str_replace('.', '', $this->input->post('nilai')),
-            'kontrak' => $this->input->post('contract'),
-            'pekerjaan' => $this->input->post('pekerjaan'),
+            'kontrak' => trim($this->input->post('contract')),
+            'pekerjaan' => trim($this->input->post('pekerjaan')),
             'apply_date' => $this->input->post('tanggal_from'),
             'end_date' => $this->input->post('tanggal_to'),
             'apply_days' => $this->input->post('days')
@@ -238,7 +238,7 @@ class Process extends CI_Controller
         $office = get_user_office($this->session->userdata('id'));
         $data = array(
             'id' => date('ymdHis') . mt_rand(1000, 9999),
-            'nama' => strtoupper($name),
+            'nama' => strtoupper(trim($name)),
             'id_office' => $office->id
         );
         if ($this->db->insert($table, $data)) $result = $data['id'];

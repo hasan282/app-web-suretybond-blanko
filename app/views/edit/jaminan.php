@@ -97,6 +97,7 @@
     'tanggal_to_input' => ['val', $jaminan['date_to'], 'input'],
     'days' => ['val', $jaminan['day'], 'keyup']
 );
+foreach ($guarantee as $key => $gr) $guarantee[$key][1] = trim($gr[1]);
 $office_id = get_user_office($this->session->userdata('id'))->id;
 if (isset($office)) $office_id = $office['id'];
 $principal = $this->db->query('SELECT id AS num, nama FROM principal WHERE id_office = ? ORDER BY nama ASC', $office_id)->result_array();
@@ -106,9 +107,9 @@ $obli_data = [];
 foreach ($principal as $pr) $princ_data['NUM' . $pr['num']] = $pr['nama'];
 foreach ($obligee as $ob) $obli_data['NUM' . $ob['num']] = $ob['nama']; ?>
 <script>
-    const jaminandata = JSON.parse('<?= str_replace("'", "\'", json_encode($guarantee)); ?>');
+    const jaminandata = <?= json_encode($guarantee); ?>;
     const data_select = {
-        'principal': JSON.parse('<?= str_replace("'", "\'", json_encode($princ_data)); ?>'),
-        'obligee': JSON.parse('<?= str_replace("'", "\'", json_encode($obli_data)); ?>')
+        "principal": <?= json_encode($princ_data); ?>,
+        "obligee": <?= json_encode($obli_data); ?>
     };
 </script>

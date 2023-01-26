@@ -1,11 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
-class History extends CI_Controller
+class History extends SELF_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->library('Plugin_library', null, 'plugin');
         $this->load->helper(['login', 'error', 'user']);
     }
 
@@ -20,16 +19,13 @@ class History extends CI_Controller
             $data['title'] = 'Histori';
             $data['plugin'] = 'basic|fontawesome|scrollbar';
             $data['history'] = $this->histories->get_list($user_id, $limit);
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
+            $this->layout->variable($data);
             if (empty($data['history'])) {
-                $this->load->view('history/empty');
+                $this->layout->content('history/empty');
             } else {
-                $this->load->view('history/main');
+                $this->layout->content('history/main');
             }
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            $this->layout->script()->print();
         } else {
             redirect(login_url());
         }

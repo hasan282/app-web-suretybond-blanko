@@ -69,17 +69,18 @@ class Report extends CI_Controller
         } else {
             $data['title'] = 'Laporan';
         }
-        $this->load->view('template/head', $data);
-        $this->load->view('template/navbar');
-        $this->load->view('template/sidebar');
-        $this->load->view('report/asuransi');
-        if ($admin) {
-            $this->load->view('report/period_button');
-        } else {
-            $this->load->view('report/print_button');
-        }
-        $this->load->view('template/footer');
-        $this->load->view('template/foot');
+        // if ($admin) {
+        //     $this->load->view('report/period_button');
+        // } else {
+        //     $this->load->view('report/print_button');
+        // }
+        $config = array('new_line_remove' => true);
+        $this->load->library('Layout_library', $config, 'layout');
+        $this->layout->variable($data);
+        $this->layout->content('report/asuransi');
+        // $this->layout->content('report/period_button');
+        // $this->layout->content('report/print_button');
+        $this->layout->script()->print();
     }
 
     public function insurance($param = null)
@@ -130,12 +131,11 @@ class Report extends CI_Controller
         if (empty($data['recap'])) {
             custom_404_admin();
         } else {
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            $this->load->view('report/per_date');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            $config = array('new_line_remove' => true);
+            $this->load->library('Layout_library', $config, 'layout');
+            $this->layout->variable($data);
+            $this->layout->content('report/per_date');
+            $this->layout->script()->print();
         }
     }
 
@@ -205,7 +205,7 @@ class Report extends CI_Controller
         if (empty($data['recap']) || empty($data['recap']['data'])) {
             custom_404_admin();
         } else {
-            $config = array('new_line_remove' => false);
+            $config = array('new_line_remove' => true);
             $this->load->library('Layout_library', $config, 'layout');
             $this->layout->variable($data);
             $this->layout->content('report/list_nav');
