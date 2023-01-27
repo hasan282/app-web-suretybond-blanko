@@ -2,11 +2,14 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class User extends CI_Controller
 {
+    private $office;
+
     public function __construct()
     {
         parent::__construct();
         $this->load->library('Plugin_library', null, 'plugin');
-        $this->load->helper(['login', 'id', 'enkrip', 'error']);
+        $this->load->helper(['login', 'user', 'id', 'enkrip', 'error']);
+        $this->office = (array) get_user_office($this->session->userdata('id'));
     }
 
     public function index()
@@ -25,22 +28,40 @@ class User extends CI_Controller
         }
     }
 
-    public function setting()
+    public function setting($param = null)
     {
         if (is_login()) {
-            $data['title'] = 'Pengaturan Akun';
-            $data['bread'] = 'User,user|Pengaturan';
-            $data['plugin'] = 'basic|fontawesome|scrollbar';
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            // $this->load->view('user/setting');
-            $this->load->view('errors/construct');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            switch ($param) {
+                case self_md5('password'):
+                    $this->_setting_password();
+                    break;
+                default:
+                    $this->_setting_view();
+                    break;
+            }
         } else {
             redirect(login_url());
         }
+    }
+
+    private function _setting_view()
+    {
+        $data['title'] = 'Pengaturan Akun';
+        $data['bread'] = 'User,user|Pengaturan';
+        $data['plugin'] = 'basic|fontawesome|scrollbar';
+        $data['office'] = $this->office;
+        $this->load->view('template/head', $data);
+        $this->load->view('template/navbar');
+        $this->load->view('template/sidebar');
+        $this->load->view('user/setting');
+        // $this->load->view('errors/construct');
+        $this->load->view('template/footer');
+        $this->load->view('template/foot');
+    }
+
+    private function _setting_password()
+    {
+        var_dump($_POST);
     }
 
     public function manage()

@@ -1,10 +1,12 @@
 <?php $password_default = $this->db->get_where('reference', array('ref' => 'password'))->row();
 $password_enkrip = self_md5($password_default->vals); ?>
-<div class="card">
-    <div class="card-body row">
-        <div class="col"></div>
-        <div class="col text-center text-md-right">
-            <a href="<?= base_url('user/add'); ?>" class="btn btn-primary text-bold"><i class="fas fa-plus-square mr-3"></i>Tambah Data User</a>
+<div class="mx-auto mw-900">
+    <div class="card">
+        <div class="card-body row">
+            <div class="col-md"></div>
+            <div class="col-md text-center text-md-right">
+                <a href="<?= base_url('user/add'); ?>" class="btn btn-primary text-bold"><i class="fas fa-plus-square mr-3"></i>Tambah Data User</a>
+            </div>
         </div>
     </div>
 </div>
@@ -27,7 +29,7 @@ $password_enkrip = self_md5($password_default->vals); ?>
             </thead>
             <tbody>
                 <?php foreach ($userlist as $num => $ul) : ?>
-                    <tr>
+                    <tr><?php $is_this_user = ($this->session->userdata('id') === $ul['id']); ?>
                         <td class="text-center text-bold border-right"><?= $num + 1; ?></td>
                         <td><?= $ul['username']; ?></td>
                         <td><?= $ul['nama']; ?></td>
@@ -40,13 +42,13 @@ $password_enkrip = self_md5($password_default->vals); ?>
                                     $check = ($active) ? 'checked ' : '';
                                     $color = ($active) ? 'text-primary' : 'text-secondary';
                                     $text = ($active) ? 'Active' : 'Inactive'; ?>
-                                    <input type="checkbox" class="custom-control-input" <?= $check; ?>id="active_<?= $ul['username']; ?>">
+                                    <input <?= ($is_this_user) ? 'disabled ' : ''; ?>type="checkbox" class="custom-control-input" <?= $check; ?>id="active_<?= $ul['username']; ?>">
                                     <label class="custom-control-label <?= $color; ?>" for="active_<?= $ul['username']; ?>"><?= $text; ?></label>
                                 </div>
                             </div>
                         </td>
                         <td class="text-center py-0 align-middle">
-                            <button <?= ($ul['password'] === $password_enkrip) ? 'disabled ' : ''; ?>type="button" class="btn btn-secondary btn-sm">Reset Password</button>
+                            <button <?= ($ul['password'] === $password_enkrip || $is_this_user) ? 'disabled ' : ''; ?>type="button" class="btn btn-secondary btn-sm">Reset Password</button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
