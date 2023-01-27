@@ -61,16 +61,13 @@ class Process extends CI_Controller
             $data['plugin'] = 'basic|fontawesome|scrollbar';
             $data['jscript'] = 'blanko/blanko.list.min';
             $data['head_name'] = 'Tersedia';
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            $this->load->view('info/blanko_use');
-            $this->load->view('blanko/body_filter');
-            $this->load->view('revision/use');
-            $this->load->view('blanko/body');
-            $this->load->view('blanko/body_data');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            $this->layout->variable($data);
+            $this->layout->content('info/blanko_use');
+            $this->layout->row(array([
+                'blanko_list/filter',
+                'revision/use'
+            ], 'blanko_list/list'));
+            $this->layout->script()->print();
         } else {
             redirect(login_url());
         }
@@ -122,15 +119,12 @@ class Process extends CI_Controller
     {
         if (is_login()) {
             $data['title'] = 'Lapor Kerusakan';
-            $data['bread'] = 'Blanko List,blanko|Lapor Rusak';
+            $data['bread'] = 'Blanko List,blanko|Pencarian,process/crash|Lapor Rusak';
             $data['plugin'] = 'basic|fontawesome|scrollbar|fileinput';
             $data['blanko'] = $blanko;
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            $this->load->view('blanko/crash');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            $this->layout->variable($data);
+            $this->layout->content('blanko/crash');
+            $this->layout->script()->print();
         } else {
             redirect(login_url());
         }
@@ -143,12 +137,9 @@ class Process extends CI_Controller
             $data['bread'] = 'Blanko List,blanko|Pencarian';
             $data['plugin'] = 'basic|fontawesome|scrollbar';
             $data['jscript'] = 'blanko.search';
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            $this->load->view('blanko/crash_list');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            $this->layout->variable($data);
+            $this->layout->content('blanko/crash_list');
+            $this->layout->script()->print();
         } else {
             redirect(login_url());
         }

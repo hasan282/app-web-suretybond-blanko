@@ -92,5 +92,5 @@ foreach ($office_list as $ol) $address_list['OF' . $ol['id']] = $ol['alamat']; ?
     </div>
 </div>
 <script>
-    const addrs = JSON.parse('<?= str_replace("'", "\'", json_encode($address_list)); ?>');
+    const addrs = <?= json_encode($address_list); ?>;
 </script>

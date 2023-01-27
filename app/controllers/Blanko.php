@@ -93,22 +93,6 @@ class Blanko extends CI_Controller
             if ($blanko_data['id_office'] == $officedata->id)
                 $this->layout->content('blanko/detail_buttons');
             $this->layout->script()->print();
-            // $this->load->view('template/head', $data);
-            // $this->load->view('template/navbar');
-            // $this->load->view('template/sidebar');
-            // $this->load->view('blanko/detail');
-            // if ($blanko_data['id_jaminan'] != null) {
-            //     $this->load->model('Guarantee_model', 'guaranties');
-            //     $data['jaminan'] = $this->guaranties->select()->where_id($blanko_data['id_jaminan']);
-            //     if (!empty($data['jaminan'])) $this->load->view('blanko/detail_used', $data);
-            // }
-            // if ($blanko_data['id_crash'] != null)
-            //     $this->load->view('blanko/detail_crash');
-            // if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
-            //     $this->load->view('produksi/detail');
-            // if ($blanko_data['id_office'] == $officedata->id) $this->load->view('blanko/detail_buttons');
-            // $this->load->view('template/footer');
-            // $this->load->view('template/foot');
         }
     }
 
@@ -256,12 +240,12 @@ class Blanko extends CI_Controller
         $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput';
         $data['bread'] = 'Blanko List,blanko|Kirim Blanko';
         $data['jscript'] = 'blanko_send';
-        $this->load->view('template/head', $data);
-        $this->load->view('template/navbar');
-        $this->load->view('template/sidebar');
-        $this->load->view('blanko/send');
-        $this->load->view('template/footer');
-        $this->load->view('template/foot');
+        $this->load->database();
+        $config = array('new_line_remove' => true);
+        $this->load->library('Layout_library', $config, 'layout');
+        $this->layout->variable($data);
+        $this->layout->content('blanko/send');
+        $this->layout->script()->print();
     }
 
     private function _send_process($from, $to)

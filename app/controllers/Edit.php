@@ -66,13 +66,12 @@ class Edit extends CI_Controller
         $data['jscript'] = 'process/used.min';
         $data['blanko'] = $blankodata;
         $data['jaminan'] = $jaminan;
-        $this->load->view('template/head', $data);
-        $this->load->view('template/navbar');
-        $this->load->view('template/sidebar');
-        $this->load->view('blanko/detail');
-        $this->load->view('edit/jaminan');
-        $this->load->view('template/footer');
-        $this->load->view('template/foot');
+        $config = array('new_line_remove' => true);
+        $this->load->library('Layout_library', $config, 'layout');
+        $this->layout->variable($data);
+        $this->layout->content('blanko/detail');
+        $this->layout->content('edit/jaminan');
+        $this->layout->script()->print();
     }
 
     private function _jaminan_process($jaminan, $blankodata)
