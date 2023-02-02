@@ -17,7 +17,9 @@
                         <p>Tidak ada Bukti Kerusakan</p>
                     </div>
                     <div class="text-center mb-5">
-                        <a href="" class="btn btn-primary text-bold"><i class="fas fa-upload mr-2"></i>Upload Bukti Kerusakan</a>
+                        <?php if ($true_office) : ?>
+                            <a href="" class="btn btn-primary text-bold disabled"><i class="fas fa-upload mr-2"></i>Upload Bukti Kerusakan</a>
+                        <?php endif; ?>
                     </div>
                 <?php else : ?>
                     <div class="mw-400 mx-auto mb-3">

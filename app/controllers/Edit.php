@@ -7,9 +7,11 @@ class Edit extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $config = array('new_line_remove' => true);
+        $this->load->library('Layout_library', $config, 'layout');
         $this->load->library('Plugin_library', null, 'plugin');
         $this->load->library('form_validation', null, 'forms');
-        $this->load->helper(['login', 'error', 'user']);
+        $this->load->helper(['login', 'error', 'user', 'enkrip']);
         $this->office = (array) get_user_office(
             $this->session->userdata('id')
         );
@@ -66,8 +68,6 @@ class Edit extends CI_Controller
         $data['jscript'] = 'process/used.min';
         $data['blanko'] = $blankodata;
         $data['jaminan'] = $jaminan;
-        $config = array('new_line_remove' => true);
-        $this->load->library('Layout_library', $config, 'layout');
         $this->layout->variable($data);
         $this->layout->content('blanko/detail');
         $this->layout->content('edit/jaminan');
@@ -126,18 +126,61 @@ class Edit extends CI_Controller
     {
         if (is_login()) {
             $blankodata = array();
-            if (empty($blankodata)) {
+            if ($param !== null) {
+                $this->load->model('Blanko_model', 'blankos');
+                $blankodata = $this->blankos->get_one($param, array(
+                    'id', 'asuransi', 'prefix', 'nomor', 'id_office', 'id_status', 'status', 'color', 'id_jaminan'
+                ));
+            }
+            if (
+                empty($blankodata) ||
+                $this->office['id'] !== $blankodata['id_office'] ||
+                $blankodata['id_jaminan'] != null
+            ) {
                 custom_404_admin();
             } else {
-                $this->_guarantee_view();
+                $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
+                $this->forms->set_rules('currency', 'Mata Uang', 'required');
+                $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.]*$/]');
+                $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
+                $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
+                $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
+                $this->forms->set_rules('days', 'Jumlah Hari', 'required');
+                if ($this->forms->run() === false) {
+                    $this->_guarantee_view($blankodata);
+                } else {
+                    $this->_guarantee_process($blankodata, $param);
+                }
             }
         } else {
             redirect(login_url());
         }
     }
 
-    private function _guarantee_view()
+    private function _guarantee_view($blanko)
     {
+        $data['title'] = 'Tambah Data Jaminan';
+        $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput';
+        $data['bread'] = 'Blanko List,blanko/used|' . $blanko['nomor'] . ',blanko/detail/' . self_md5($blanko['id']) . '|Tambah Jaminan';
+        $data['blanko'] = $blanko;
+        $data['jscript'] = 'process/used.min';
+        $this->layout->variable($data);
+        $this->layout->content('blanko/detail');
+        $this->layout->content('blanko_use/form');
+        $this->layout->script()->print();
+    }
+
+    private function _guarantee_process($blanko, $enkrip)
+    {
+        $this->load->model('Blanko_use_model', 'uses');
+        $this->uses->status_change(false);
+        if ($this->uses->process($blanko['id'])) {
+            // echo 'success';
+            redirect('blanko/detail/' . $enkrip);
+        } else {
+            // echo 'failed';
+            redirect('blanko/detail/' . $enkrip);
+        }
     }
 
     private function _new_data($name, $table)

@@ -2,15 +2,21 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Blanko_use_model extends CI_Model
 {
-    private $office, $change;
+    private $office, $change, $status_change;
 
-    public function __construct()
+    public function __construct($status = true)
     {
         parent::__construct();
         $this->load->database();
         $this->load->helper(['user', 'enkrip', 'image']);
         $this->office = get_user_office($this->session->userdata('id'));
         $this->change = array();
+        $this->status_change = $status;
+    }
+
+    public function status_change($status = true)
+    {
+        $this->status_change = $status;
     }
 
     public function process($used, $revision_from = null)
@@ -54,7 +60,8 @@ class Blanko_use_model extends CI_Model
         foreach ($jaminan_data as $k => $v) if ($v == '') unset($jaminan_data[$k]);
         $result_used = $this->db->insert('blanko_used', $used_data);
         $result_jaminan = $this->db->insert('jaminan', $jaminan_data);
-        $result_update = $this->db->update('blanko', $used_update, array('id' => $used));
+        $result_update = true;
+        if ($this->status_change) $result_update = $this->db->update('blanko', $used_update, array('id' => $used));
         $result_revisi = true;
         if ($revision_from != null) $result_revisi = $this->_revision($revision_from, $used);
         return ($result_used && $result_jaminan && $result_update && $result_revisi);
