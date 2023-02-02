@@ -26,7 +26,8 @@
 </head>
 <?php $page_class = array(
     'admin' => array('body' => ' sidebar-mini layout-fixed', 'div' => 'wrapper'),
-    'login' => array('body' => ' login-page bg-pattern', 'div' => 'login-box')
+    'login' => array('body' => ' login-page bg-pattern', 'div' => 'login-box'),
+    'blank' => array('body' => ' bg-pattern', 'div' => 'wrapper'),
 );
 $page_type = (isset($type) && array_key_exists($type, $page_class)) ? $type : 'admin'; ?>
 

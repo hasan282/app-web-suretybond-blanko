@@ -122,6 +122,24 @@ class Edit extends CI_Controller
         }
     }
 
+    public function guarantee($param = null)
+    {
+        if (is_login()) {
+            $blankodata = array();
+            if (empty($blankodata)) {
+                custom_404_admin();
+            } else {
+                $this->_guarantee_view();
+            }
+        } else {
+            redirect(login_url());
+        }
+    }
+
+    private function _guarantee_view()
+    {
+    }
+
     private function _new_data($name, $table)
     {
         $result = '';

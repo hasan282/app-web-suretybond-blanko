@@ -53,47 +53,58 @@ class Blanko extends CI_Controller
             if ($id === null) {
                 custom_404_admin();
             } else {
-                $this->_detail_view($id);
+                $this->_detail_process($id);
             }
         } else {
             custom_404_admin();
         }
     }
 
-    private function _detail_view($id)
+    private function _detail_process($id)
     {
         $this->load->model('Blanko_model', 'blankos');
-        $blanko_data = $this->blankos->get_one($id);
-        if (empty($blanko_data)) {
+        $blanko = $this->blankos->get_one($id);
+        if (empty($blanko)) {
             custom_404_admin();
         } else {
-            $officedata = get_user_office($this->session->userdata('id'));
-            $data['title'] = 'Detail Blanko';
-            $data['plugin'] = 'basic|fontawesome|scrollbar';
-            $breads = array('1' => '', '2' => '/used', '3' => '/crash', '4' => '/crash');
-            $data['bread'] = 'Blanko List,blanko' . $breads[$blanko_data['id_status']] . '|Detail';
-            $data['blanko'] = $blanko_data;
-            $data['true_office'] = ($blanko_data['id_office'] == $officedata->id);
-            $config = array('new_line_remove' => true);
-            $this->load->library('Layout_library', $config, 'layout');
-            $this->layout->variable($data);
-            $this->layout->content('blanko/detail');
-            if ($blanko_data['id_jaminan'] != null) {
-                $this->load->model('Guarantee_model', 'guaranties');
-                $data['jaminan'] = $this->guaranties->select()->where_id($blanko_data['id_jaminan']);
-                if (!empty($data['jaminan'])) {
-                    $this->layout->variable($data);
-                    $this->layout->content('blanko/detail_used');
-                }
+            $office = get_user_office($this->session->userdata('id'));
+            if ($blanko['id_office'] == $office->id || $office->id_tipe == '1') {
+                $this->_detail_view($blanko, $office);
+            } else {
+                custom_404_admin();
             }
-            if ($blanko_data['id_crash'] != null)
-                $this->layout->content('blanko/detail_crash');
-            if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
-                $this->layout->content('produksi/detail');
-            if ($blanko_data['id_office'] == $officedata->id)
-                $this->layout->content('blanko/detail_buttons');
-            $this->layout->script()->print();
         }
+    }
+
+    private function _detail_view($blanko_data, $officedata)
+    {
+        $data['title'] = 'Detail Blanko';
+        $data['plugin'] = 'basic|fontawesome|scrollbar';
+        $breads = array('1' => '', '2' => '/used', '3' => '/crash', '4' => '/crash');
+        $data['bread'] = 'Blanko List,blanko' . $breads[$blanko_data['id_status']] . '|Detail';
+        $data['blanko'] = $blanko_data;
+        $data['true_office'] = ($blanko_data['id_office'] == $officedata->id);
+        $config = array('new_line_remove' => true);
+        $this->load->library('Layout_library', $config, 'layout');
+        $this->layout->variable($data);
+        $this->layout->content('blanko/detail');
+        if ($blanko_data['id_jaminan'] != null) {
+            $this->load->model('Guarantee_model', 'guaranties');
+            $data['jaminan'] = $this->guaranties->select()->where_id($blanko_data['id_jaminan']);
+            if (!empty($data['jaminan'])) {
+                $this->layout->variable($data);
+                $this->layout->content('blanko/detail_used');
+            }
+        } else {
+            if ($blanko_data['id_status'] != '1') $this->layout->content('info/add_jaminan');
+        }
+        if ($blanko_data['id_crash'] != null)
+            $this->layout->content('blanko/detail_crash');
+        if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
+            $this->layout->content('produksi/detail');
+        if ($blanko_data['id_office'] == $officedata->id)
+            $this->layout->content('blanko/detail_buttons');
+        $this->layout->script()->print();
     }
 
     public function add()
