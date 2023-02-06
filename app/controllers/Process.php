@@ -230,7 +230,8 @@ class Process extends CI_Controller
         $data = array(
             'id' => date('ymdHis') . mt_rand(1000, 9999),
             'nama' => strtoupper(trim($name)),
-            'id_office' => $office->id
+            'id_office' => $office->id,
+            'visible' => 1
         );
         if ($this->db->insert($table, $data)) $result = $data['id'];
         return $result;

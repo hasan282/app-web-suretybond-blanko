@@ -35,9 +35,6 @@ class Login extends CI_Controller
             $page_source .= $this->load->view('login/body', $data, true);
             $page_source .= $this->load->view('template/foot', $data, true);
             echo trim(preg_replace('/\s\s+/', ' ', $page_source));
-            // $this->load->view('template/head', $data);
-            // $this->load->view('login/body');
-            // $this->load->view('template/foot');
         } else {
             $this->_authorize();
         }

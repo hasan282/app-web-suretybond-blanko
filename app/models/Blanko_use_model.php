@@ -85,7 +85,8 @@ class Blanko_use_model extends CI_Model
         $data = array(
             'id' => date('ymdHis') . mt_rand(1000, 9999),
             'nama' => strtoupper(trim($name)),
-            'id_office' => $this->office->id
+            'id_office' => $this->office->id,
+            'visible' => 1
         );
         if ($this->db->insert($table, $data)) $result = $data['id'];
         return $result;

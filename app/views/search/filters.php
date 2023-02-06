@@ -1,13 +1,15 @@
-<?php $theme = array(
-    'available' => ['primary', 'Tersedia'],
-    'used' => ['success', 'Sudah Terpakai'],
-    'crash' => ['danger', 'Revisi dan Rusak']
-);
-$status = (isset($status) && array_key_exists($status, $theme)) ? $status : 'available'; ?>
-<div class="card mb-1 card-outline card-<?= $theme[$status][0]; ?>">
+<div class="card">
+    <div class="card-body">
+
+    </div>
+</div>
+
+
+
+<div class="card mb-1">
     <div class="overlay" id="loading"></div>
     <div class="card-header">
-        <h3 class="card-title">Blanko <?= $theme[$status][1]; ?> <strong id="count_data">0</strong> Data</h3>
+        <h3 class="card-title">Total <strong id="count_data">0</strong> Data Blanko</h3>
     </div>
     <div class="card-body" id="blanko_list">
         <div class="text-muted d-flex justify-content-center" style="min-height:30vh;opacity:0.3">

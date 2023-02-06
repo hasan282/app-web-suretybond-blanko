@@ -12,9 +12,10 @@ class Errors extends SELF_Controller
         $data['title'] = '404 Not Found';
         $data['plugin'] = 'basic|fontawesome';
         $data['type'] = 'blank';
-        $this->load->view('template/head', $data);
-        $this->load->view('errors/admin_body_404');
-        $this->load->view('template/foot');
+        $source = $this->load->view('template/head', $data, true);
+        $source .= $this->load->view('errors/admin_body_404', $data, true);
+        $source .= $this->load->view('template/foot', $data, true);
+        echo trim(preg_replace('/\s\s+/', ' ', $source));
     }
 
     public function admin()
