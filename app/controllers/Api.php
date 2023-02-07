@@ -97,6 +97,9 @@ class Api extends CI_Controller
                 case 'usedfrom':
                     $this->_blanko_used($this->input->get('office'));
                     break;
+                case 'search':
+                    $this->_search();
+                    break;
                 default:
                     bad_request();
                     break;
@@ -125,15 +128,16 @@ class Api extends CI_Controller
         $order = array('asuransi', 'nomor');
         $data = $this->blankos->used($fields, $where)->order($order);
         print_data(array(
-                'count' => $data->count(),
-                'list' => $data->limit(
-                    intval($this->input->get('limit')),
-                    intval($this->input->get('offset'))
-                )->data_list()
-            ));
+            'count' => $data->count(),
+            'list' => $data->limit(
+                intval($this->input->get('limit')),
+                intval($this->input->get('offset'))
+            )->data_list()
+        ));
     }
 
-    private function _all_used()
+    private function _search()
     {
+        print_data('3454');
     }
 }
