@@ -138,6 +138,23 @@ class Api extends CI_Controller
 
     private function _search()
     {
-        print_data('3454');
+        $where = array();
+        $fields = array(
+            'enkripsi', 'asuransi_nick', 'prefix', 'nomor',
+            'status', 'color', 'produksi', 'principal', 'office_nick'
+        );
+        $filter = array('asuransi', 'nomor', 'office', 'status');
+        foreach ($filter as $fil) {
+            $value = $this->input->get($fil);
+            if ($value != '') $where[$fil] = $value;
+        }
+        $limit = intval($this->input->get('limit'));
+        if ($limit < 10 || $limit > 100) $limit = 10;
+        $this->load->model('List_model', 'lists');
+        $data = $this->lists->select($fields)->where($where)->order(['asuransi', 'nomor']);
+        print_data(array(
+            'count' => $data->count(),
+            'list' => $data->limit($limit, intval($this->input->get('offset')))->data_list()
+        ));
     }
 }

@@ -13,7 +13,7 @@ class Search extends SELF_Controller
         if (true_access()) {
             $data['title'] = 'Pencarian';
             $data['plugin'] = 'basic|fontawesome|scrollbar';
-            $data['jscript'] = 'functions/table|search/funct';
+            $data['jscript'] = 'functions/table.min|search/funct';
             $this->layout->variable($data);
             $this->layout->content('search/filters');
             $this->layout->content('search/table');
