@@ -20,9 +20,13 @@ class List_model extends SELF_Model
         return $this;
     }
 
-    // public function from(array $table = [])
-    // {
-    // }
+    public function data_count(string $field = 'blanko.id')
+    {
+        $this->select = 'SELECT COUNT(' . $field . ') AS total FROM';
+        $this->_query_assemble();
+        $result = parent::data();
+        return intval($result['total']);
+    }
 
     public function where(array $where = [])
     {
@@ -48,6 +52,7 @@ class List_model extends SELF_Model
             }
         }
         if (sizeof($binds) > 0) $this->binds = $binds;
+        $this->_query_assemble();
         return $this;
     }
 

@@ -8,7 +8,7 @@ class Api extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->helper(['api', 'user', 'login', 'enkrip']);
+        $this->load->helper(['api', 'user', 'login', 'enkrip', 'format']);
         $this->office = get_user_office($this->session->userdata('id'));
         api_header();
     }
@@ -151,10 +151,18 @@ class Api extends CI_Controller
         $limit = intval($this->input->get('limit'));
         if ($limit < 10 || $limit > 100) $limit = 10;
         $this->load->model('List_model', 'lists');
-        $data = $this->lists->select($fields)->where($where)->order(['asuransi', 'nomor']);
-        print_data(array(
-            'count' => $data->count(),
-            'list' => $data->limit($limit, intval($this->input->get('offset')))->data_list()
-        ));
+        $data['count'] = $this->lists->where($where)->data_count();
+        $resultlist = $this->lists->select($fields)->order(['nomor'])
+            ->limit($limit, intval($this->input->get('offset')))->data_list();
+        foreach ($resultlist as $num => $rs) {
+            if ($rs['principal'] === null) $resultlist[$num]['principal'] = '- - -';
+            if ($rs['produksi'] === null) {
+                $resultlist[$num]['produksi'] = '--';
+            } else {
+                $resultlist[$num]['produksi'] = format_date($rs['produksi'] . '-01', 'MM2 YY2');
+            }
+        }
+        $data['list'] = $resultlist;
+        print_data($data);
     }
 }

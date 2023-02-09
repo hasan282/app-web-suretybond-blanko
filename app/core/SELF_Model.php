@@ -76,6 +76,14 @@ class SELF_Model extends CI_Model
         }
     }
 
+    public function counter(string $field = 'blanko.id')
+    {
+        $counter = 'SELECT (CASE WHEN ' . $field . ' IS NOT NULL THEN 1 ELSE 0 END) AS counter, ';
+        $queries = 'SELECT COUNT(counter) AS total FROM (' . $counter . ltrim($this->query, 'SELECT ') . ') AS results GROUP BY counter';
+        $result = $this->db->query($queries, $this->binds)->row();
+        return intval($result->total);
+    }
+
     /**
      * Return Build Query String
      * @return array query dan bind value
