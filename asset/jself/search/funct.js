@@ -1,8 +1,12 @@
 let initial_setup = false;
+let filter_values = { asuransi: false, office: false, range: false, status: false, laprod: false, tipe: false };
 $(function () {
 
     $('#searchnumber').on('search', function () {
-        if ($(this).val() != '') blanko_action();
+        const allempty = ($('input[type="hidden"]').filter(function () {
+            return ($.trim($(this).val()).length > 0);
+        }).length === 0);
+        if ($(this).val() != '' || !allempty) blanko_action();
     });
 
     $('#searchbutton').on('click', function () {
@@ -13,12 +17,50 @@ $(function () {
         if (initial_setup) table_option({ limit: parseInt($(this).val()) });
     });
 
+    $('.filterselect').on('change', function () {
+        const elementid = $(this).attr('id');
+        const elementval = $(this).val();
+        filter_values[elementid] = (elementval != '');
+        enable_button();
+    });
+
+    $('#clearall').click(function () {
+        $('.filterselect').each(function () {
+            $(this).val('');
+        });
+        $('input[type="hidden"]').each(function () {
+            $(this).val('');
+        });
+        Object.keys(filter_values).forEach(k => filter_values[k] = false);
+        enable_button();
+    });
+
+    $('#filterbutton').click(function () {
+        $('.filterselect').each(function () {
+            const elementid = $(this).attr('id');
+            const elementval = $(this).val();
+            $('#val_' + elementid).val(elementval);
+        });
+        $('#searchnumber').val('');
+        blanko_action();
+    });
+
 });
 
 function blanko_action() {
     const number = $('#searchnumber').val();
+    const asuransi = $('#val_asuransi').val();
+    const agent = $('#val_office').val();
+    const stats = $('#val_status').val();
+    const produksi = $('#val_laprod').val();
+    const tipe = $('#val_tipe').val();
     let queries = '&get=search';
     if (number != '') queries += '&nomor=' + number;
+    if (asuransi != '') queries += '&asuransi=' + asuransi;
+    if (agent != '') queries += '&office=' + agent;
+    if (stats != '') queries += '&status=' + stats;
+    if (produksi != '') queries += '&produksi=' + produksi;
+    if (tipe != '') queries += '&tipe=' + tipe;
     if (initial_setup) {
         table_option({ query: queries });
     } else {
@@ -44,4 +86,9 @@ function init_action(queries) {
         table_row: '<td class="text-bold">$asuransi_nick</td><td class="text-center border-right"><span class="text-secondary">$prefix</span><b>$nomor</b></td><td class="text-center text-bold text-$color">$status</td><td class="border-right">$principal</td><td class="text-center text-bold">$office_nick</td><td class="text-center border-left border-right">$produksi</td>',
         option_button: '<a href="' + base_url('blanko/detail/$enkripsi') + '" class="btn btn-info btn-sm text-bold"><i class="fas fa-info-circle mr-2"></i>Detail</a><a href="' + base_url('blanko/detail/$enkripsi') + '" target="_blank" class="btn btn-default ml-1 btn-sm text-bold"><i class="fas fa-external-link-alt"></i></a>'
     });
+}
+
+function enable_button() {
+    const allfalse = Object.values(filter_values).every(v => v === false);
+    $('#filterbutton').attr('disabled', allfalse);
 }

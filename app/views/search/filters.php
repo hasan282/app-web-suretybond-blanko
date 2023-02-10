@@ -16,10 +16,10 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
         </div>
         <div class="card-body pb-2">
             <div class="row">
-                <div class="col-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                         <label for="asuransi">Asuransi</label>
-                        <select name="asuransi" id="asuransi" class="form-control">
+                        <select name="asuransi" id="asuransi" class="form-control filterselect">
                             <option value="" selected>---</option>
                             <?php foreach ($data_asuransi as $da) : ?>
                                 <option value="<?= $da['enkripsi']; ?>"><?= $da['nama']; ?></option>
@@ -27,10 +27,10 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
                         </select>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                         <label for="office">Agen Pengguna</label>
-                        <select name="office" id="office" class="form-control">
+                        <select name="office" id="office" class="form-control filterselect">
                             <option value="" selected>---</option>
                             <?php foreach ($data_office as $do) : ?>
                                 <option value="<?= $do['id']; ?>"><?= $do['nama']; ?></option>
@@ -38,16 +38,19 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
                         </select>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                         <label for="rangefrom">Nomor Blanko <small>(range)</small></label>
-                        <input type="text" name="rangefrom" id="rangefrom" class="form-control" disabled>
+                        <div class="input-group">
+                            <input type="text" name="rangefrom" id="rangefrom" class="form-control" placeholder="Dari" disabled>
+                            <input type="text" name="rangeto" id="rangeto" class="form-control" placeholder="Sampai" disabled>
+                        </div>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="form-group">
-                        <label for="blankostatus">Status Blanko</label>
-                        <select name="blankostatus" id="blankostatus" class="form-control">
+                        <label for="status">Status Blanko</label>
+                        <select name="status" id="status" class="form-control filterselect">
                             <option value="" selected>---</option>
                             <option value="1">Tersedia</option>
                             <option value="2">Terpakai</option>
@@ -56,10 +59,10 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
                         </select>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                         <label for="laprod">Laporan Produksi</label>
-                        <select name="laprod" id="laprod" class="form-control">
+                        <select name="laprod" id="laprod" class="form-control filterselect">
                             <option value="" selected>---</option>
                             <?php foreach ($data_month as $dm) : ?>
                                 <option value="<?= $dm['laprod']; ?>"><?= format_date($dm['laprod'] . '-01', 'MM3 YY2'); ?></option>
@@ -67,10 +70,10 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
                         </select>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-6">
                     <div class="form-group">
-                        <label for="jaminantipe">Jenis Jaminan</label>
-                        <select name="jaminantipe" id="jaminantipe" class="form-control">
+                        <label for="tipe">Jenis Jaminan</label>
+                        <select name="tipe" id="tipe" class="form-control filterselect">
                             <option value="" selected>---</option>
                             <?php foreach ($data_tipe as $dt) : ?>
                                 <option value="<?= $dt['id']; ?>"><?= $dt['tipe']; ?></option>
@@ -81,8 +84,8 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
             </div>
         </div>
         <div class="card-footer text-center">
-            <button type="button" class="btn btn-primary text-bold" disabled><i class="fas fa-search mr-2"></i>Cari Data Blanko</button>
-            <button type="button" class="btn btn-default ml-1 show-tooltip" title="Clear Filter"><i class="fas fa-eraser"></i></button>
+            <button type="button" id="filterbutton" class="btn btn-primary text-bold" disabled><i class="fas fa-search mr-2"></i>Cari Data Blanko</button>
+            <button type="button" id="clearall" class="btn btn-default ml-1 show-tooltip" title="Clear Filter"><i class="fas fa-eraser"></i></button>
         </div>
     </div>
 </div>

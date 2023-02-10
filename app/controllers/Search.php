@@ -17,6 +17,7 @@ class Search extends SELF_Controller
             $this->layout->variable($data);
             $this->layout->content('search/filters');
             $this->layout->content('search/table');
+            $this->layout->content('search/export');
             $this->layout->script()->print();
         } else {
             custom_404_admin();

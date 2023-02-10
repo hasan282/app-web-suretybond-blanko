@@ -59,7 +59,9 @@
                     </button>
                 </div>
             </div>
-            <div class="col-md"></div>
+            <div class="col-md text-center text-md-right">
+                <a href="" class="btn btn-default disabled">Detail</a>
+            </div>
         </div>
     </div>
 </div>

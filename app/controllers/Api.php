@@ -143,7 +143,7 @@ class Api extends CI_Controller
             'enkripsi', 'asuransi_nick', 'prefix', 'nomor',
             'status', 'color', 'produksi', 'principal', 'office_nick'
         );
-        $filter = array('asuransi', 'nomor', 'office', 'status');
+        $filter = array('asuransi', 'nomor', 'office', 'status', 'produksi', 'tipe');
         foreach ($filter as $fil) {
             $value = $this->input->get($fil);
             if ($value != '') $where[$fil] = $value;
