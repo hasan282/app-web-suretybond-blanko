@@ -4,7 +4,7 @@
             <div class="card-body text-center">
                 <h6><?= $blanko['asuransi']; ?></h6>
                 <h3 class="mb-0"><span id="prefix_view"><?= $blanko['prefix']; ?></span><span class="text-bold"><?= $blanko['nomor']; ?></span></h3>
-                <p class="mt-2 text-fade mb-0">Status Blanko : <span class="text-<?= $blanko['color']; ?>"><?= $blanko['status']; ?></span></p>
+                <p class="mt-2 text-secondary mb-0">Status Blanko : <span class="text-<?= $blanko['color']; ?>"><?= $blanko['status']; ?></span></p>
                 <?php if ($blanko['id_status'] == '2') :
                     $use_data = $this->db->query('SELECT principal.nama AS principal, jaminan.nomor AS jaminan, jaminan.nilai AS nilai FROM (blanko_used INNER JOIN jaminan ON blanko_used.id_jaminan = jaminan.id) INNER JOIN principal ON jaminan.id_principal = principal.id WHERE id_blanko = ?', $blanko['id'])->row(); ?>
                     <table class="mt-2 table table-bordered table-sm text-left text-secondary">
@@ -21,12 +21,20 @@
                             <td><?= (isset($use_data->nilai)) ? self_number_format($use_data->nilai) : '-'; ?></td>
                         </tr>
                     </table>
+                    <div class="text-center pt-3">
+                        <a href="<?= base_url('blanko/detail/' . self_md5($blanko['id'])); ?>" class="btn btn-info btn-sm"><i class="fas fa-info-circle mr-2"></i>Lihat Detail Blanko</a>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
         <form action="<?= base_url(uri_string()); ?>" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
             <div class="card">
                 <div class="card-body">
+                    <?php if ($blanko['id_status'] == '1') : ?>
+                        <div class="text-center pb-3">
+                            <a href="<?= base_url('process/crashes/' . self_md5($blanko['id'])); ?>" class="btn btn-secondary btn-sm"><i class="fas fa-list-alt mr-2"></i>Input Bersama Data Jaminan</a>
+                        </div>
+                    <?php endif; ?>
                     <input type="hidden" name="blanko_id" value="<?= $blanko['id']; ?>">
                     <div class="form-group">
                         <label for="keterangan">Keterangan Blanko Rusak <small>(wajib diisi)</small></label>

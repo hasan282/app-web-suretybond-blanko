@@ -42,8 +42,8 @@ $data_month = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NU
                     <div class="form-group">
                         <label for="rangefrom">Nomor Blanko <small>(range)</small></label>
                         <div class="input-group">
-                            <input type="text" name="rangefrom" id="rangefrom" class="form-control" placeholder="Dari" disabled>
-                            <input type="text" name="rangeto" id="rangeto" class="form-control" placeholder="Sampai" disabled>
+                            <input type="text" name="rangefrom" id="rangefrom" class="form-control numrange" placeholder="Dari">
+                            <input type="text" name="rangeto" id="rangeto" class="form-control numrange" placeholder="Sampai">
                         </div>
                     </div>
                 </div>

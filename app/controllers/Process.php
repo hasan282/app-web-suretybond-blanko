@@ -130,6 +130,48 @@ class Process extends CI_Controller
         }
     }
 
+    public function crashes($param = null)
+    {
+        if ($param === null) {
+            $this->_list_for_crash();
+        } else {
+            $blankodata = $this->blankos->get_one($param);
+            if (!empty($blankodata) && $this->office->id == $blankodata['id_office']) {
+                if ($blankodata['id_status'] == '1') {
+                    $this->form_validation->set_rules('keterangan', 'Keterangan', 'required');
+                    if ($this->form_validation->run() === false) {
+                        $this->_crashes_view($blankodata);
+                    } else {
+                        // $this->_crash_process($param);
+                        echo 'Crashes Process';
+
+                        var_dump($this->input->post());
+                    }
+                } else {
+                    redirect('process/crash/' . $param);
+                }
+            } else {
+                $this->_errors();
+            }
+        }
+    }
+
+    private function _crashes_view($blanko)
+    {
+        if (is_login()) {
+            $data['title'] = 'Lapor Kerusakan';
+            $data['bread'] = 'Blanko List,blanko|Pencarian,process/crash|Lapor Rusak';
+            $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput|fileinput';
+            $data['blanko'] = $blanko;
+            $data['jscript'] = 'process/used.min|process/crashes';
+            $this->layout->variable($data);
+            $this->layout->content('blanko/crashes');
+            $this->layout->script()->print();
+        } else {
+            redirect(login_url());
+        }
+    }
+
     private function _list_for_crash()
     {
         if (is_login()) {
@@ -147,37 +189,41 @@ class Process extends CI_Controller
 
     private function _used_process($params = [])
     {
-        $jaminan_data = array(
-            'id' => date('ymdHis') . mt_rand(1000, 9999),
-            'id_tipe' => $this->input->post('jenis'),
-            'nomor' => trim($this->input->post('jaminan_num')),
-            'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
-            'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
-            'id_currency' => $this->input->post('currency'),
-            'nilai' => str_replace('.', '', $this->input->post('nilai')),
-            'kontrak' => trim($this->input->post('contract')),
-            'pekerjaan' => trim($this->input->post('pekerjaan')),
-            'apply_date' => $this->input->post('tanggal_from'),
-            'end_date' => $this->input->post('tanggal_to'),
-            'apply_days' => $this->input->post('days')
-        );
-        $jaminan_data['enkripsi'] = self_md5($jaminan_data['id']);
-        $use_data = array(
-            'id' => date('ymdHis') . mt_rand(1000, 9999),
-            'id_blanko' => $params['id'],
-            'id_jaminan' => $jaminan_data['id'],
-            'id_user' => get_user_id($this->session->userdata('id'))
-        );
-        $use_data['enkripsi'] = self_md5($use_data['id']);
-        $dimension = array(
-            'width' => intval($this->input->post('inp_width')),
-            'height' => intval($this->input->post('inp_height'))
-        );
-        if (check_upload_file('image_upload')) $use_data['image'] = $this->_upload($dimension, 'blanko_use');
-        $new_principal = $this->input->post('principal_input');
-        if ($new_principal != '') $jaminan_data['id_principal'] = $this->_new_data($new_principal, 'principal');
-        $new_obligee = $this->input->post('obligee_input');
-        if ($new_obligee != '') $jaminan_data['id_obligee'] = $this->_new_data($new_obligee, 'obligee');
+        // $jaminan_data = array(
+        //     'id' => date('ymdHis') . mt_rand(1000, 9999),
+        //     'id_tipe' => $this->input->post('jenis'),
+        //     'nomor' => trim($this->input->post('jaminan_num')),
+        //     'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
+        //     'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
+        //     'id_currency' => $this->input->post('currency'),
+        //     'nilai' => str_replace('.', '', $this->input->post('nilai')),
+        //     'kontrak' => trim($this->input->post('contract')),
+        //     'pekerjaan' => trim($this->input->post('pekerjaan')),
+        //     'apply_date' => $this->input->post('tanggal_from'),
+        //     'end_date' => $this->input->post('tanggal_to'),
+        //     'apply_days' => $this->input->post('days')
+        // );
+        // $jaminan_data['enkripsi'] = self_md5($jaminan_data['id']);
+        // $use_data = array(
+        //     'id' => date('ymdHis') . mt_rand(1000, 9999),
+        //     'id_blanko' => $params['id'],
+        //     'id_jaminan' => $jaminan_data['id'],
+        //     'id_user' => get_user_id($this->session->userdata('id'))
+        // );
+        // $use_data['enkripsi'] = self_md5($use_data['id']);
+        // $dimension = array(
+        //     'width' => intval($this->input->post('inp_width')),
+        //     'height' => intval($this->input->post('inp_height'))
+        // );
+        // if (check_upload_file('image_upload')) $use_data['image'] = $this->_upload($dimension, 'blanko_use');
+
+        // $new_principal = $this->input->post('principal_input');
+        // if ($new_principal != '') $jaminan_data['id_principal'] = $this->_new_data($new_principal, 'principal');
+        // $new_obligee = $this->input->post('obligee_input');
+        // if ($new_obligee != '') $jaminan_data['id_obligee'] = $this->_new_data($new_obligee, 'obligee');
+
+        $jaminan_data = $this->_data_jaminan();
+        $use_data = $this->_data_used($params['id'], $jaminan_data['id']);
         $update_blanko = array('id_status' => 2);
         foreach ($jaminan_data as $k => $v) if ($v == '') unset($jaminan_data[$k]);
         foreach ($use_data as $k => $v) if ($v == '') unset($use_data[$k]);
@@ -197,21 +243,27 @@ class Process extends CI_Controller
 
     private function _crash_process($enkripsi)
     {
-        $crashdata = array(
-            'id' => date('ymdHis') . mt_rand(1000, 9999),
-            'id_blanko' => $this->input->post('blanko_id'),
-            'keterangan' => $this->input->post('keterangan'),
-            'id_user' => get_user_id($this->session->userdata('id'))
-        );
-        $crashdata['enkripsi'] = self_md5($crashdata['id']);
-        $dimension = array(
-            'width' => intval($this->input->post('inp_width')),
-            'height' => intval($this->input->post('inp_height'))
-        );
-        if (check_upload_file('image_upload')) $crashdata['image'] = $this->_upload($dimension, 'blanko_crash');
+        // $crashdata = array(
+        //     'id' => date('ymdHis') . mt_rand(1000, 9999),
+        //     'id_blanko' => $this->input->post('blanko_id'),
+        //     'keterangan' => $this->input->post('keterangan'),
+        //     'id_user' => get_user_id($this->session->userdata('id'))
+        // );
+        // $crashdata['enkripsi'] = self_md5($crashdata['id']);
+        // $dimension = array(
+        //     'width' => intval($this->input->post('inp_width')),
+        //     'height' => intval($this->input->post('inp_height'))
+        // );
+        // if (check_upload_file('image_upload')) $crashdata['image'] = $this->_upload($dimension, 'blanko_crash');
+
+        $crashdata = $this->_data_crash();
         foreach ($crashdata as $k => $v) if ($v == '') unset($usedata[$k]);
         $result_insert = $this->db->insert('blanko_crash', $crashdata);
-        $result_update = $this->db->update('blanko', array('id_status' => 3), array('id' => $crashdata['id_blanko']));
+        $result_update = $this->db->update(
+            'blanko',
+            array('id_status' => 3),
+            array('id' => $crashdata['id_blanko'])
+        );
         if ($result_insert && $result_update) {
             $flash_message = array('status' => 'success');
             $this->session->set_flashdata('flash_message', $flash_message);
@@ -221,6 +273,10 @@ class Process extends CI_Controller
             $this->session->set_flashdata('flash_message', $flash_message);
             redirect('blanko/detail/' . $enkripsi);
         }
+    }
+
+    private function _crashes_process()
+    {
     }
 
     private function _new_data($name, $table)
@@ -252,7 +308,8 @@ class Process extends CI_Controller
             $upload_data = $this->upload->data();
             $uploaded_file = $upload_data['file_name'];
             if ($dimension['height'] > $max_pixel || $dimension['width'] > $max_pixel) {
-                $rotate_img = ($dimension['height'] == $upload_data['image_width'] && $dimension['width'] == $upload_data['image_height']);
+                $rotate_img = ($dimension['height'] == $upload_data['image_width'] &&
+                    $dimension['width'] == $upload_data['image_height']);
                 $uploaded_file = $this->_resize($upload_data, $max_pixel, $rotate_img);
             }
         }
@@ -289,5 +346,68 @@ class Process extends CI_Controller
         } else {
             redirect();
         }
+    }
+
+    private function _data_used($blanko, $jaminan, $upload = true)
+    {
+        $dimension = $this->_data_dimension();
+        $data = array(
+            'id' => date('ymdHis') . mt_rand(1000, 9999),
+            'id_blanko' => $blanko,
+            'id_jaminan' => $jaminan,
+            'id_user' => get_user_id($this->session->userdata('id'))
+        );
+        $data['enkripsi'] = self_md5($data['id']);
+        if (check_upload_file('image_upload') && $upload)
+            $data['image'] = $this->_upload($dimension, 'blanko_use');
+        return $data;
+    }
+
+    private function _data_crash($upload = true)
+    {
+        $dimension = $this->_data_dimension();
+        $data = array(
+            'id' => date('ymdHis') . mt_rand(1000, 9999),
+            'id_blanko' => $this->input->post('blanko_id'),
+            'keterangan' => $this->input->post('keterangan'),
+            'id_user' => get_user_id($this->session->userdata('id'))
+        );
+        $data['enkripsi'] = self_md5($data['id']);
+        if (check_upload_file('image_upload') && $upload)
+            $data['image'] = $this->_upload($dimension, 'blanko_crash');
+        return $data;
+    }
+
+    private function _data_jaminan()
+    {
+        $data = array(
+            'id' => date('ymdHis') . mt_rand(1000, 9999),
+            'id_tipe' => $this->input->post('jenis'),
+            'nomor' => trim($this->input->post('jaminan_num')),
+            'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
+            'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
+            'id_currency' => $this->input->post('currency'),
+            'nilai' => str_replace('.', '', $this->input->post('nilai')),
+            'kontrak' => trim($this->input->post('contract')),
+            'pekerjaan' => trim($this->input->post('pekerjaan')),
+            'apply_date' => $this->input->post('tanggal_from'),
+            'end_date' => $this->input->post('tanggal_to'),
+            'apply_days' => $this->input->post('days')
+        );
+        $data['enkripsi'] = self_md5($data['id']);
+        $new_principal = $this->input->post('principal_input');
+        $new_obligee = $this->input->post('obligee_input');
+        if ($new_principal != '') $data['id_principal'] = $this->_new_data($new_principal, 'principal');
+        if ($new_obligee != '') $data['id_obligee'] = $this->_new_data($new_obligee, 'obligee');
+        return $data;
+    }
+
+    private function _data_dimension()
+    {
+        $data = array(
+            'width' => intval($this->input->post('inp_width')),
+            'height' => intval($this->input->post('inp_height'))
+        );
+        return $data;
     }
 }

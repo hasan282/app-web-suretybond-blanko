@@ -28,6 +28,9 @@ $(function () {
         $('.filterselect').each(function () {
             $(this).val('');
         });
+        $('.numrange').each(function () {
+            $(this).val('');
+        });
         $('input[type="hidden"]').each(function () {
             $(this).val('');
         });
@@ -43,6 +46,13 @@ $(function () {
         });
         $('#searchnumber').val('');
         blanko_action();
+    });
+
+    $('.numrange').on('keyup', function () {
+        const valfrom = $('#rangefrom').val();
+        const valto = $('#rangeto').val();
+        filter_values.range = (valfrom != '' && valto != '');
+        enable_button();
     });
 
 });
@@ -66,6 +76,10 @@ function blanko_action() {
     } else {
         init_action(queries);
     }
+}
+
+function number_range() {
+
 }
 
 function init_action(queries) {
