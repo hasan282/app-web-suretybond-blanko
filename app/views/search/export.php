@@ -11,6 +11,7 @@
                 <input type="hidden" name="val_status" id="val_status" value="">
                 <input type="hidden" name="val_laprod" id="val_laprod" value="">
                 <input type="hidden" name="val_tipe" id="val_tipe" value="">
+                <input type="hidden" name="val_range" id="val_range" value="">
             </div>
         </div>
     </div>

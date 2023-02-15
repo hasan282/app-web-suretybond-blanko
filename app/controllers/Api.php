@@ -151,9 +151,12 @@ class Api extends CI_Controller
         $limit = intval($this->input->get('limit'));
         if ($limit < 10 || $limit > 100) $limit = 10;
         $this->load->model('List_model', 'lists');
-        $data['count'] = $this->lists->where($where)->data_count();
+        $data['count'] = $this->lists->where($where)->between(
+            explode('-', $this->input->get('range'))
+        )->data_count();
         $resultlist = $this->lists->select($fields)->order(['nomor'])
-            ->limit($limit, intval($this->input->get('offset')))->data_list();
+            ->limit($limit, intval($this->input->get('offset')))
+            ->data_list();
         foreach ($resultlist as $num => $rs) {
             if ($rs['principal'] === null) $resultlist[$num]['principal'] = '- - -';
             if ($rs['produksi'] === null) {

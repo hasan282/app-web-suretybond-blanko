@@ -44,14 +44,13 @@ $(function () {
             const elementval = $(this).val();
             $('#val_' + elementid).val(elementval);
         });
+        $('#val_range').val(number_range());
         $('#searchnumber').val('');
         blanko_action();
     });
 
     $('.numrange').on('keyup', function () {
-        const valfrom = $('#rangefrom').val();
-        const valto = $('#rangeto').val();
-        filter_values.range = (valfrom != '' && valto != '');
+        filter_values.range = (number_range() != '');
         enable_button();
     });
 
@@ -64,6 +63,7 @@ function blanko_action() {
     const stats = $('#val_status').val();
     const produksi = $('#val_laprod').val();
     const tipe = $('#val_tipe').val();
+    const range = $('#val_range').val();
     let queries = '&get=search';
     if (number != '') queries += '&nomor=' + number;
     if (asuransi != '') queries += '&asuransi=' + asuransi;
@@ -71,6 +71,7 @@ function blanko_action() {
     if (stats != '') queries += '&status=' + stats;
     if (produksi != '') queries += '&produksi=' + produksi;
     if (tipe != '') queries += '&tipe=' + tipe;
+    if (range != '') queries += '&range=' + range;
     if (initial_setup) {
         table_option({ query: queries });
     } else {
@@ -79,7 +80,9 @@ function blanko_action() {
 }
 
 function number_range() {
-
+    const valfrom = $('#rangefrom').val();
+    const valto = $('#rangeto').val();
+    return (valfrom != '' && valto != '') ? valfrom + '-' + valto : '';
 }
 
 function init_action(queries) {

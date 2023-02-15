@@ -21,10 +21,13 @@ class Data extends SELF_Controller
     {
         echo 'Principal';
 
-        $number = '344.454.550,55215';
-        // var_dump(substr($number, 0, 2));
-        // var_dump(intval('-43gfgf31.ewer'));
-        var_dump(float_input($number));
+        $this->load->model('List_model', 'lists');
+        $vars = $this->lists->where(array(
+            'status' => 2, 'asuransi' => '334322'
+        ))->order(array('asuransi', 'nomor'))->between(array('0081', '0091'))->query_string();
+        var_dump($vars);
+
+        echo $vars['query'];
     }
 
     public function obligee()

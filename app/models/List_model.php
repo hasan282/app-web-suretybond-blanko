@@ -2,14 +2,14 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class List_model extends SELF_Model
 {
-    private $select, $from, $where, $order;
+    private $select, $from, $wheres, $order;
 
     public function __construct()
     {
         parent::__construct();
         $this->select = null;
         $this->from = null;
-        $this->where = null;
+        $this->wheres = array();
         $this->order = null;
     }
 
@@ -48,10 +48,21 @@ class List_model extends SELF_Model
                 }
             }
             if (sizeof($conditions) > 0) {
-                $this->where .= ' WHERE ' . implode(' AND ', (array_column(array_values($conditions), 0)));
+                $where_string = implode(' AND ', (array_column(array_values($conditions), 0)));
+                array_push($this->wheres, $where_string);
             }
         }
-        if (sizeof($binds) > 0) $this->binds = $binds;
+        if (sizeof($binds) > 0) $this->_binds_add($binds);
+        $this->_query_assemble();
+        return $this;
+    }
+
+    public function between(array $value = [], $field = 'blanko.nomor')
+    {
+        if (sizeof($value) === 2) {
+            array_push($this->wheres, '(' . $field . ' BETWEEN ? AND ?)');
+            $this->_binds_add($value);
+        }
         $this->_query_assemble();
         return $this;
     }
@@ -126,12 +137,19 @@ class List_model extends SELF_Model
         $this->from = $queries;
     }
 
+    private function _binds_add(array $bind)
+    {
+        if (is_array($this->binds)) $this->binds = array_merge($this->binds, $bind);
+        if (is_string($this->binds)) $this->binds = array_merge(array($this->binds), $bind);
+        if ($this->binds === false) $this->binds = $bind;
+    }
+
     private function _query_assemble()
     {
         if ($this->select === null) $this->_selectors(array());
         if ($this->from === null) $this->_tables();
         $this->query = $this->select . ' ' . $this->from;
-        if ($this->where !== null) $this->query .= $this->where;
+        if (sizeof($this->wheres) > 0) $this->query .= ' WHERE ' . implode(' AND ', $this->wheres);
         if ($this->order !== null) $this->query .= $this->order;
     }
 }
