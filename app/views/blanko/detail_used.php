@@ -12,7 +12,7 @@ if (!function_exists('set_date_to')) {
 $detail_jaminan = array(
     ['title' => 'Jenis Jaminan', 'value' => $jaminan['tipe'] . ' (' . $jaminan['tipe2'] . ')', 'nowrap' => array(true, true)],
     ['title' => 'Nomor Jaminan', 'value' => $jaminan['nomor'], 'nowrap' => array(true, true)],
-    ['title' => 'Nilai Jaminan', 'value' => $jaminan['currency'] . ' ' . self_number_format($jaminan['nilai']), 'nowrap' => array(true, true)],
+    ['title' => 'Nilai Jaminan', 'value' => $jaminan['currency'] . ' ' . self_number_format($jaminan['nilai'], 2), 'nowrap' => array(true, true)],
     ['title' => 'Principal', 'value' => $jaminan['principal'], 'nowrap' => array(false, true)],
     ['title' => 'Nomor Kontrak', 'value' => nl2br($jaminan['kontrak']), 'nowrap' => array(true, false)],
     ['title' => 'Pekerjaan', 'value' => nl2br($jaminan['pekerjaan']), 'nowrap' => array(false, false)],

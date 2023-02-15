@@ -10,7 +10,7 @@ class Revision extends CI_Controller
         $config = array('new_line_remove' => true);
         $this->load->library('Layout_library', $config, 'layout');
         $this->load->library('Plugin_library', null, 'plugin');
-        $this->load->helper(['login', 'error', 'user', 'enkrip']);
+        $this->load->helper(['login', 'error', 'user', 'enkrip', 'format']);
         $this->office = get_user_office($this->session->userdata('id'));
         $this->blankodata = array();
     }
@@ -62,7 +62,7 @@ class Revision extends CI_Controller
                 if ($param != null) $this->_set_blankodata($param);
                 $this->load->library('form_validation', null, 'forms');
                 $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
-                $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.]*$/]');
+                $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
                 $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
                 $this->forms->set_rules('tanggal_from', 'Tanggal Mulai', 'required');
                 $this->forms->set_rules('tanggal_to', 'Tanggal Berakhir', 'required');

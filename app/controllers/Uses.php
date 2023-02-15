@@ -107,7 +107,7 @@ class Uses extends SELF_Controller
                     $blankodata = $this->_blankodata($param);
                     $this->load->library('form_validation', null, 'forms');
                     $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
-                    $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.]*$/]');
+                    $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
                     $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
                     $this->forms->set_rules('tanggal_from', 'Tanggal Mulai', 'required');
                     $this->forms->set_rules('tanggal_to', 'Tanggal Berakhir', 'required');

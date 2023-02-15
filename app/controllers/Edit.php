@@ -11,7 +11,7 @@ class Edit extends CI_Controller
         $this->load->library('Layout_library', $config, 'layout');
         $this->load->library('Plugin_library', null, 'plugin');
         $this->load->library('form_validation', null, 'forms');
-        $this->load->helper(['login', 'error', 'user', 'enkrip']);
+        $this->load->helper(['login', 'error', 'user', 'enkrip', 'format']);
         $this->office = (array) get_user_office(
             $this->session->userdata('id')
         );
@@ -40,13 +40,14 @@ class Edit extends CI_Controller
                     array('id', 'enkrip', 'asuransi', 'prefix', 'nomor', 'rev_status', 'color')
                 )->where(array('jaminan' => $jaminan['real_id']))->data();
                 $blankodata['status'] = $blankodata['rev_status'];
-                $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
-                $this->forms->set_rules('currency', 'Mata Uang', 'required');
-                $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.]*$/]');
-                $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
-                $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
-                $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
-                $this->forms->set_rules('days', 'Jumlah Hari', 'required');
+                // $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
+                // $this->forms->set_rules('currency', 'Mata Uang', 'required');
+                // $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
+                // $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
+                // $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
+                // $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
+                // $this->forms->set_rules('days', 'Jumlah Hari', 'required');
+                $this->_input_rules();
                 if ($this->forms->run() === false) {
                     $this->_jaminan_view($jaminan, $blankodata);
                 } else {
@@ -58,6 +59,17 @@ class Edit extends CI_Controller
         } else {
             redirect(login_url());
         }
+    }
+
+    private function _input_rules()
+    {
+        $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
+        $this->forms->set_rules('currency', 'Mata Uang', 'required');
+        $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
+        $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
+        $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
+        $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
+        $this->forms->set_rules('days', 'Jumlah Hari', 'required');
     }
 
     private function _jaminan_view($jaminan, $blankodata)
@@ -95,7 +107,7 @@ class Edit extends CI_Controller
             'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
             'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
             'id_currency' => $this->input->post('currency'),
-            'nilai' => str_replace('.', '', $this->input->post('nilai')),
+            'nilai' => float_input($this->input->post('nilai')),
             'kontrak' => trim($this->input->post('contract')),
             'pekerjaan' => trim($this->input->post('pekerjaan')),
             'apply_date' => $this->input->post('tanggal_from'),
@@ -139,13 +151,14 @@ class Edit extends CI_Controller
             ) {
                 custom_404_admin();
             } else {
-                $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
-                $this->forms->set_rules('currency', 'Mata Uang', 'required');
-                $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.]*$/]');
-                $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
-                $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
-                $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
-                $this->forms->set_rules('days', 'Jumlah Hari', 'required');
+                // $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
+                // $this->forms->set_rules('currency', 'Mata Uang', 'required');
+                // $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
+                // $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
+                // $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
+                // $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
+                // $this->forms->set_rules('days', 'Jumlah Hari', 'required');
+                $this->_input_rules();
                 if ($this->forms->run() === false) {
                     $this->_guarantee_view($blankodata);
                 } else {

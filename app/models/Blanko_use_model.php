@@ -8,7 +8,7 @@ class Blanko_use_model extends CI_Model
     {
         parent::__construct();
         $this->load->database();
-        $this->load->helper(['user', 'enkrip', 'image']);
+        $this->load->helper(['user', 'enkrip', 'image', 'format']);
         $this->office = get_user_office($this->session->userdata('id'));
         $this->change = array();
         $this->status_change = $status;
@@ -45,7 +45,7 @@ class Blanko_use_model extends CI_Model
             'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
             'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
             'id_currency' => $this->input->post('currency'),
-            'nilai' => str_replace('.', '', $this->input->post('nilai')),
+            'nilai' => float_input($this->input->post('nilai')),
             'kontrak' => trim($this->input->post('contract')),
             'pekerjaan' => trim($this->input->post('pekerjaan')),
             'apply_date' => $this->input->post('tanggal_from'),

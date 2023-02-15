@@ -142,10 +142,9 @@ class Process extends CI_Controller
                     if ($this->form_validation->run() === false) {
                         $this->_crashes_view($blankodata);
                     } else {
-                        // $this->_crash_process($param);
-                        echo 'Crashes Process';
-
-                        var_dump($this->input->post());
+                        $this->_crashes_process(
+                            array('id' => $blankodata['id'], 'enkrip' => $param)
+                        );
                     }
                 } else {
                     redirect('process/crash/' . $param);
@@ -189,44 +188,9 @@ class Process extends CI_Controller
 
     private function _used_process($params = [])
     {
-        // $jaminan_data = array(
-        //     'id' => date('ymdHis') . mt_rand(1000, 9999),
-        //     'id_tipe' => $this->input->post('jenis'),
-        //     'nomor' => trim($this->input->post('jaminan_num')),
-        //     'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
-        //     'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
-        //     'id_currency' => $this->input->post('currency'),
-        //     'nilai' => str_replace('.', '', $this->input->post('nilai')),
-        //     'kontrak' => trim($this->input->post('contract')),
-        //     'pekerjaan' => trim($this->input->post('pekerjaan')),
-        //     'apply_date' => $this->input->post('tanggal_from'),
-        //     'end_date' => $this->input->post('tanggal_to'),
-        //     'apply_days' => $this->input->post('days')
-        // );
-        // $jaminan_data['enkripsi'] = self_md5($jaminan_data['id']);
-        // $use_data = array(
-        //     'id' => date('ymdHis') . mt_rand(1000, 9999),
-        //     'id_blanko' => $params['id'],
-        //     'id_jaminan' => $jaminan_data['id'],
-        //     'id_user' => get_user_id($this->session->userdata('id'))
-        // );
-        // $use_data['enkripsi'] = self_md5($use_data['id']);
-        // $dimension = array(
-        //     'width' => intval($this->input->post('inp_width')),
-        //     'height' => intval($this->input->post('inp_height'))
-        // );
-        // if (check_upload_file('image_upload')) $use_data['image'] = $this->_upload($dimension, 'blanko_use');
-
-        // $new_principal = $this->input->post('principal_input');
-        // if ($new_principal != '') $jaminan_data['id_principal'] = $this->_new_data($new_principal, 'principal');
-        // $new_obligee = $this->input->post('obligee_input');
-        // if ($new_obligee != '') $jaminan_data['id_obligee'] = $this->_new_data($new_obligee, 'obligee');
-
         $jaminan_data = $this->_data_jaminan();
         $use_data = $this->_data_used($params['id'], $jaminan_data['id']);
         $update_blanko = array('id_status' => 2);
-        foreach ($jaminan_data as $k => $v) if ($v == '') unset($jaminan_data[$k]);
-        foreach ($use_data as $k => $v) if ($v == '') unset($use_data[$k]);
         $result_jaminan = $this->db->insert('jaminan', $jaminan_data);
         $result_use = $this->db->insert('blanko_used', $use_data);
         $result_update = $this->db->update('blanko', $update_blanko, array('id' => $use_data['id_blanko']));
@@ -243,21 +207,7 @@ class Process extends CI_Controller
 
     private function _crash_process($enkripsi)
     {
-        // $crashdata = array(
-        //     'id' => date('ymdHis') . mt_rand(1000, 9999),
-        //     'id_blanko' => $this->input->post('blanko_id'),
-        //     'keterangan' => $this->input->post('keterangan'),
-        //     'id_user' => get_user_id($this->session->userdata('id'))
-        // );
-        // $crashdata['enkripsi'] = self_md5($crashdata['id']);
-        // $dimension = array(
-        //     'width' => intval($this->input->post('inp_width')),
-        //     'height' => intval($this->input->post('inp_height'))
-        // );
-        // if (check_upload_file('image_upload')) $crashdata['image'] = $this->_upload($dimension, 'blanko_crash');
-
         $crashdata = $this->_data_crash();
-        foreach ($crashdata as $k => $v) if ($v == '') unset($usedata[$k]);
         $result_insert = $this->db->insert('blanko_crash', $crashdata);
         $result_update = $this->db->update(
             'blanko',
@@ -275,8 +225,26 @@ class Process extends CI_Controller
         }
     }
 
-    private function _crashes_process()
+    private function _crashes_process($blanko)
     {
+        $jaminandata = $this->_data_jaminan();
+        $usedata = $this->_data_used($blanko['id'], $jaminandata['id'], false);
+        $crashdata = $this->_data_crash();
+        $results = array(
+            $this->db->insert('blanko_crash', $crashdata),
+            $this->db->insert('blanko_used', $usedata),
+            $this->db->insert('jaminan', $jaminandata),
+            $this->db->update('blanko', array('id_status' => 3), array('id' => $blanko['id']))
+        );
+        if (in_array(false, $results)) {
+            $flash_message = array('status' => 'danger');
+            $this->session->set_flashdata('flash_message', $flash_message);
+            redirect('blanko/detail/' . $blanko['enkrip']);
+        } else {
+            $flash_message = array('status' => 'success');
+            $this->session->set_flashdata('flash_message', $flash_message);
+            redirect('blanko/detail/' . $blanko['enkrip']);
+        }
     }
 
     private function _new_data($name, $table)
@@ -358,8 +326,10 @@ class Process extends CI_Controller
             'id_user' => get_user_id($this->session->userdata('id'))
         );
         $data['enkripsi'] = self_md5($data['id']);
-        if (check_upload_file('image_upload') && $upload)
-            $data['image'] = $this->_upload($dimension, 'blanko_use');
+        if ($upload) {
+            if (check_upload_file('image_upload'))
+                $data['image'] = $this->_upload($dimension, 'blanko_use');
+        }
         return $data;
     }
 
@@ -373,8 +343,10 @@ class Process extends CI_Controller
             'id_user' => get_user_id($this->session->userdata('id'))
         );
         $data['enkripsi'] = self_md5($data['id']);
-        if (check_upload_file('image_upload') && $upload)
-            $data['image'] = $this->_upload($dimension, 'blanko_crash');
+        if ($upload) {
+            if (check_upload_file('image_upload'))
+                $data['image'] = $this->_upload($dimension, 'blanko_crash');
+        }
         return $data;
     }
 
@@ -387,7 +359,7 @@ class Process extends CI_Controller
             'id_principal' => str_replace('NUM', '', $this->input->post('principal')),
             'id_obligee' => str_replace('NUM', '', $this->input->post('obligee')),
             'id_currency' => $this->input->post('currency'),
-            'nilai' => str_replace('.', '', $this->input->post('nilai')),
+            'nilai' => float_input($this->input->post('nilai')),
             'kontrak' => trim($this->input->post('contract')),
             'pekerjaan' => trim($this->input->post('pekerjaan')),
             'apply_date' => $this->input->post('tanggal_from'),
@@ -399,6 +371,7 @@ class Process extends CI_Controller
         $new_obligee = $this->input->post('obligee_input');
         if ($new_principal != '') $data['id_principal'] = $this->_new_data($new_principal, 'principal');
         if ($new_obligee != '') $data['id_obligee'] = $this->_new_data($new_obligee, 'obligee');
+        foreach ($data as $k => $v) if ($v == '') unset($data[$k]);
         return $data;
     }
 

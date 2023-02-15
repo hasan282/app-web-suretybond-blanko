@@ -13,7 +13,7 @@
 $guarantee = array(
     'jenis' => ['val', $jaminan->id_tipe, 'change'],
     'currency' => ['val', $jaminan->id_currency, 'change'],
-    'nilai' => ['val', $jaminan->nilai, 'keyup'],
+    'nilai' => ['val', self_number_format($jaminan->nilai, 2), 'keyup'],
     'jaminan_num' => ['val', $jaminan->nomor, 'keyup'],
     'principal' => ['val', 'NUM' . $jaminan->id_principal, 'change'],
     'obligee' => ['val', 'NUM' . $jaminan->id_obligee, 'change'],

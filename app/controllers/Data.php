@@ -5,7 +5,7 @@ class Data extends SELF_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->helper(['login', 'error', 'user']);
+        $this->load->helper(['login', 'error', 'user', 'format']);
     }
 
     public function index()
@@ -20,6 +20,11 @@ class Data extends SELF_Controller
     public function principal()
     {
         echo 'Principal';
+
+        $number = '344.454.550,55215';
+        // var_dump(substr($number, 0, 2));
+        // var_dump(intval('-43gfgf31.ewer'));
+        var_dump(float_input($number));
     }
 
     public function obligee()

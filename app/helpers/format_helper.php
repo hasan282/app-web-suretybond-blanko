@@ -38,6 +38,17 @@ function modify_days($date, $days = '+1')
 
 function self_number_format($number, $decimal = 0)
 {
-    $my_number = intval($number);
+    $my_number = floatval($number);
     return number_format($my_number, $decimal, ',', '.');
+}
+
+if (!function_exists('float_input')) {
+    function float_input(string $number, $decimal = 2)
+    {
+        $numbers = explode(',', $number);
+        if (!isset($numbers[1])) $numbers[1] = '0';
+        $num0 = intval(str_replace('.', '', $numbers[0]));
+        $num1 = str_pad(substr($numbers[1], 0, $decimal), $decimal, '0');
+        return $num0 . '.' . $num1;
+    }
 }

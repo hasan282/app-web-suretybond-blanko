@@ -85,7 +85,7 @@
 <?php $guarantee = array(
     'jenis' => ['val', $jaminan['tipe_id'], 'change'],
     'currency' => ['val', $jaminan['currency_id'], 'change'],
-    'nilai' => ['val', $jaminan['nilai'], 'keyup'],
+    'nilai' => ['val', self_number_format($jaminan['nilai'], 2), 'keyup'],
     'jaminan_num' => ['val', $jaminan['nomor'], 'keyup'],
     'principal' => ['val', 'NUM' . $jaminan['principal_id'], 'change'],
     'obligee' => ['val', 'NUM' . $jaminan['obligee_id'], 'change'],
