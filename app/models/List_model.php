@@ -32,6 +32,7 @@ class List_model extends SELF_Model
     {
         $binds = array();
         $conditions = array(
+            'enkripsi' => ['blanko.enkripsi = ?', 'value'],
             'nomor' => ['blanko.nomor LIKE ?', '%value%'],
             'status' => ['blanko.id_status = ?', 'value'],
             'office' => ['blanko.id_office = ?', 'value'],

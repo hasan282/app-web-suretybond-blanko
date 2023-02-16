@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="col-md text-center text-md-right">
-                <a href="" class="btn btn-default disabled">Detail</a>
+                <button class="btn btn-default" disabled>Lihat Semua Kolom<i class="fas fa-external-link-alt ml-2"></i></button>
             </div>
         </div>
     </div>

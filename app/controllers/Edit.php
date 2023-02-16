@@ -40,19 +40,32 @@ class Edit extends CI_Controller
                     array('id', 'enkrip', 'asuransi', 'prefix', 'nomor', 'rev_status', 'color')
                 )->where(array('jaminan' => $jaminan['real_id']))->data();
                 $blankodata['status'] = $blankodata['rev_status'];
-                // $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
-                // $this->forms->set_rules('currency', 'Mata Uang', 'required');
-                // $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
-                // $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
-                // $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
-                // $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
-                // $this->forms->set_rules('days', 'Jumlah Hari', 'required');
                 $this->_input_rules();
                 if ($this->forms->run() === false) {
                     $this->_jaminan_view($jaminan, $blankodata);
                 } else {
                     $this->_jaminan_process($jaminan, $blankodata);
                 }
+            } else {
+                custom_404_admin();
+            }
+        } else {
+            redirect(login_url());
+        }
+    }
+
+    public function status($param = null)
+    {
+        if (is_login()) {
+            $blankodata = array();
+            if ($param !== null) {
+                $this->load->model('List_model', 'lists');
+                $fields = array('id', 'enkripsi', 'prefix', 'nomor', 'asuransi', 'status_id', 'status', 'color', 'office_id');
+                $blankodata = $this->lists->select($fields)->where(['enkripsi' => $param])->data();
+            }
+            if (!empty($blankodata) && $this->office['id'] == $blankodata['office_id']) {
+                // var_dump($blankodata);
+                $this->_status_view($blankodata);
             } else {
                 custom_404_admin();
             }
@@ -134,6 +147,20 @@ class Edit extends CI_Controller
         }
     }
 
+    private function _status_view($blankodata)
+    {
+        $data['title'] = 'Ubah Status Blanko';
+        $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput';
+        $data['bread'] = 'Blanko List,blanko/used|' . $blankodata['nomor'] . ',blanko/detail/' . $blankodata['enkripsi'] . '|Ubah Status';
+        $data['jscript'] = 'process/used.min';
+        $data['statusedit'] = false;
+        $data['blanko'] = $blankodata;
+        $this->layout->variable($data);
+        $this->layout->content('blanko/detail');
+        $this->layout->content('edit/status');
+        $this->layout->script()->print();
+    }
+
     public function guarantee($param = null)
     {
         if (is_login()) {
@@ -151,13 +178,6 @@ class Edit extends CI_Controller
             ) {
                 custom_404_admin();
             } else {
-                // $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
-                // $this->forms->set_rules('currency', 'Mata Uang', 'required');
-                // $this->forms->set_rules('nilai', 'Nilai Jaminan', 'required|regex_match[/^[0-9.,]*$/]');
-                // $this->forms->set_rules('jaminan_num', 'Nomor Jaminan', 'required');
-                // $this->forms->set_rules('tanggal_from', 'Dari Tanggal', 'required');
-                // $this->forms->set_rules('tanggal_to', 'Sampai Tanggal', 'required');
-                // $this->forms->set_rules('days', 'Jumlah Hari', 'required');
                 $this->_input_rules();
                 if ($this->forms->run() === false) {
                     $this->_guarantee_view($blankodata);
