@@ -16,7 +16,7 @@ class Plugin_library
                 ['url' => base_url('asset/plugin/jquery/jquery.min.js'), 'type' => ['js', 'top']],
                 ['url' => base_url('asset/plugin/bootstrap/js/bootstrap.bundle.min.js'), 'type' => ['js', 'bottom']],
                 ['url' => base_url('asset/js/adminlte.min.js'), 'type' => ['js', 'bottom']],
-                ['url' => base_url('asset/jself/all_function.js?j=s' . mt_rand(100, 999)), 'type' => ['js', 'bottom']]
+                ['url' => base_url('asset/jself/functions/all.min.js?j=s' . mt_rand(100, 999)), 'type' => ['js', 'bottom']]
             ),
             'fontawesome' => array(
                 ['url' => base_url('asset/plugin/fontawesome-free/css/all.min.css'), 'type' => ['css', 'top']]

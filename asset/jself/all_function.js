@@ -16,10 +16,35 @@ function base_url(uri = '') {
     return basic_all_url + uri;
 }
 
-function convert_date(date) {
+function convert_date(date, tipe = 1) {
+    let dateresult = null; let dt = [];
     const month = ('Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember').split(',');
-    const dt = date.split('-');
-    return (dt.length == 3) ? parseInt(dt[2]) + ' ' + month[dt[1] - 1] + ' ' + dt[0] : null;
+    switch (tipe) {
+        case 1:
+            dt = date.split('-');
+            if (dt.length == 3) dateresult = parseInt(dt[2]) + ' ' + month[dt[1] - 1] + ' ' + dt[0];
+            break;
+        case 2:
+            dt = date.split('-');
+            if (dt.length == 3) dateresult = dt[2] + '/' + dt[1] + '/' + dt[0];
+            break;
+        case 11:
+            dt = date.split('/');
+            if (dt.length == 3) dateresult = parseInt(dt[2]) + ' ' + month[dt[1] - 1] + ' ' + dt[0];
+            break;
+        case 12:
+            dt = date.split('/');
+            if (dt.length == 3) dateresult = dt[2] + '-' + dt[1] + '-' + dt[0];
+            break;
+        case 13:
+            dt = date.split('/');
+            if (dt.length == 3) dateresult = parseInt(dt[0]) + ' ' + month[dt[1] - 1] + ' ' + dt[2];
+            break;
+        default:
+            dateresult = null;
+            break;
+    }
+    return dateresult;
 }
 
 function formating_number(number) {
@@ -28,16 +53,22 @@ function formating_number(number) {
 
 function setup_datepicker(selector, multiple_form = false) {
     $(selector).datetimepicker({
-        format: 'YYYY-MM-DD'
+        format: 'DD/MM/YYYY'
     });
     let preview = '.datetimepicker-input';
     if (multiple_form) preview = selector + '_input';
-    $(preview).on('input', function () {
-        const vals = $(this).val();
+    $(preview).on('focus', function () {
+        const preval = $(this).prev().val();
+        $(this).val(convert_date(preval, 2));
+    });
+    $(preview).on('focusout', function () {
+        const vals = $(this).prev().val();
         $(this).val(convert_date(vals));
     });
-    $(preview).on('keydown keypress', function () {
-        return false;
+    $(preview).prev().on('input', function () {
+        const vals = $(this).val();
+        $(this).val(convert_date(vals, 12));
+        $(preview).val(convert_date(vals, 13));
     });
 }
 

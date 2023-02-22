@@ -19,10 +19,10 @@ $guarantee = array(
     'obligee' => ['val', 'NUM' . $jaminan->id_obligee, 'change'],
     'contract' => ['html', $jaminan->kontrak, 'keyup'],
     'pekerjaan' => ['html', $jaminan->pekerjaan, 'keyup'],
-    'val_tanggal_from' => ['val', $jaminan->apply_date, 'input'],
-    'tanggal_from_input' => ['val', $jaminan->apply_date, 'input'],
-    'val_tanggal_to' => ['val', $jaminan->end_date, 'input'],
-    'tanggal_to_input' => ['val', $jaminan->end_date, 'input'],
+    'val_tanggal_from' => ['val', format_date($jaminan->apply_date, 'DD2/MM1/YY2'), 'input'],
+    'tanggal_from_input' => ['val', '', 'focusout'],
+    'val_tanggal_to' => ['val', format_date($jaminan->end_date, 'DD2/MM1/YY2'), 'input'],
+    'tanggal_to_input' => ['val', '', 'focusout'],
     'days' => ['val', $jaminan->apply_days, 'keyup']
 );
 foreach ($guarantee as $key => $gr) $guarantee[$key][1] = trim($gr[1]); ?>
