@@ -76,5 +76,35 @@ foreach ($detail_jaminan as $key => $dj) if ($dj['value'] === null) $detail_jami
                 <?php endif; ?>
             </div>
         </div>
+        <div class="mx-auto mw-600 pt-3">
+            <div id="box_btn_ket" class="text-center<?= ($blanko['ket_used'] == null) ? '' : ' zero-height'; ?>">
+                <button id="show_keterangan" type="button" class="btn btn-link btn-sm text-bold"><i class="fas fa-plus mr-2"></i>Tambahkan Keterangan</button>
+            </div>
+            <form action="<?= base_url('edit/note/used'); ?>" method="POST">
+                <input type="hidden" name="used" value="<?= $blanko['id_use']; ?>">
+                <input type="hidden" name="enkrip" value="<?= self_md5($blanko['id']); ?>">
+                <div id="box_keterangan" class="<?= ($blanko['ket_used'] == null) ? ' zero-height' : ''; ?>">
+                    <label for="keterangan">Keterangan<span id="edit_keterangan" class="text-secondary link-transparent show-tooltip" title="Edit Keterangan"><i class="fas fa-edit ml-2"></i></span></label>
+                    <textarea id="keterangan" name="keterangan" class="form-control" placeholder="Keterangan" rows="3" disabled><?= $blanko['ket_used']; ?></textarea>
+                </div>
+                <div id="box_btn_save" class="text-center zero-height">
+                    <button class="btn btn-primary btn-sm text-bold mt-3">Simpan Keterangan</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $('#show_keterangan').click(function() {
+            $('#box_btn_ket').addClass('zero-height');
+            $('#box_keterangan').removeClass('zero-height');
+            $('#box_btn_save').removeClass('zero-height');
+            $('#keterangan').attr('disabled', false);
+        });
+        $('#edit_keterangan').click(function() {
+            $('#box_btn_save').removeClass('zero-height');
+            $('#keterangan').attr('disabled', false);
+        });
+    });
+</script>

@@ -74,6 +74,17 @@
                             </div>
                         </div>
                     </div>
+                    <div class="text-center pt-3">
+                        <button type="button" id="show_keterangan" data-show="0" class="btn btn-sm btn-link">
+                            <i class="fas fa-plus mr-2"></i>Tambahkan Keterangan
+                        </button>
+                    </div>
+                    <div id="box_keterangan" class="zero-height">
+                        <div class="form-group">
+                            <label for="keterangan">Keterangan</label>
+                            <textarea class="form-control" name="keterangan" id="keterangan" rows="4" placeholder="Keterangan"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,4 +144,19 @@ foreach ($obligee as $ob) $obli_data['NUM' . $ob['num']] = $ob['nama']; ?>
         "principal": <?= json_encode($princ_data); ?>,
         "obligee": <?= json_encode($obli_data); ?>
     };
+    $(function() {
+        $('#show_keterangan').click(function() {
+            const is_show = ($(this).data('show') == '1');
+            if (is_show) {
+                $(this).html('<i class="fas fa-plus mr-2"></i>Tambahkan Keterangan');
+                $(this).data('show', '0');
+                $('#keterangan').val('');
+                $('#box_keterangan').addClass('zero-height');
+            } else {
+                $(this).html('<i class="fas fa-times mr-2"></i>Batalkan');
+                $(this).data('show', '1');
+                $('#box_keterangan').removeClass('zero-height');
+            }
+        });
+    });
 </script>

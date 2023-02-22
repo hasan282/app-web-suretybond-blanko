@@ -74,6 +74,66 @@ class Edit extends CI_Controller
         }
     }
 
+    public function guarantee($param = null)
+    {
+        if (is_login()) {
+            $blankodata = array();
+            if ($param !== null) {
+                $this->load->model('Blanko_model', 'blankos');
+                $blankodata = $this->blankos->get_one($param, array(
+                    'id', 'asuransi', 'prefix', 'nomor', 'id_office', 'id_status', 'status', 'color', 'id_jaminan'
+                ));
+            }
+            if (
+                empty($blankodata) ||
+                $this->office['id'] !== $blankodata['id_office'] ||
+                $blankodata['id_jaminan'] != null
+            ) {
+                custom_404_admin();
+            } else {
+                $this->_input_rules();
+                if ($this->forms->run() === false) {
+                    $this->_guarantee_view($blankodata);
+                } else {
+                    $this->_guarantee_process($blankodata, $param);
+                }
+            }
+        } else {
+            redirect(login_url());
+        }
+    }
+
+    public function note($param = 'none')
+    {
+        if (is_login()) {
+            $tipe = array('used');
+            $blankoused = $this->db->get_where('blanko_used', array(
+                'id' => $this->input->post('used')
+            ))->row();
+            if ($blankoused == null || !in_array($param, $tipe)) {
+                custom_404_admin();
+            } else {
+                $directlink = 'blanko/detail/' . $this->input->post('enkrip');
+                $keterangan = $this->input->post('keterangan');
+                if ($blankoused->keterangan == $keterangan) {
+                    // no edit
+                    redirect($directlink);
+                } else {
+                    $result_edit = $this->db->update('blanko_used', ['keterangan' => $keterangan], ['id' => $blankoused->id]);
+                    if ($result_edit) {
+                        // success
+                        redirect($directlink);
+                    } else {
+                        // failed
+                        redirect($directlink);
+                    }
+                }
+            }
+        } else {
+            redirect(login_url());
+        }
+    }
+
     private function _input_rules()
     {
         $this->forms->set_rules('jenis', 'Jenis Jaminan', 'required');
@@ -159,35 +219,6 @@ class Edit extends CI_Controller
         $this->layout->content('blanko/detail');
         $this->layout->content('edit/status');
         $this->layout->script()->print();
-    }
-
-    public function guarantee($param = null)
-    {
-        if (is_login()) {
-            $blankodata = array();
-            if ($param !== null) {
-                $this->load->model('Blanko_model', 'blankos');
-                $blankodata = $this->blankos->get_one($param, array(
-                    'id', 'asuransi', 'prefix', 'nomor', 'id_office', 'id_status', 'status', 'color', 'id_jaminan'
-                ));
-            }
-            if (
-                empty($blankodata) ||
-                $this->office['id'] !== $blankodata['id_office'] ||
-                $blankodata['id_jaminan'] != null
-            ) {
-                custom_404_admin();
-            } else {
-                $this->_input_rules();
-                if ($this->forms->run() === false) {
-                    $this->_guarantee_view($blankodata);
-                } else {
-                    $this->_guarantee_process($blankodata, $param);
-                }
-            }
-        } else {
-            redirect(login_url());
-        }
     }
 
     private function _guarantee_view($blanko)

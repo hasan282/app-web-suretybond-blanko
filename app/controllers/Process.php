@@ -323,6 +323,7 @@ class Process extends CI_Controller
             'id' => date('ymdHis') . mt_rand(1000, 9999),
             'id_blanko' => $blanko,
             'id_jaminan' => $jaminan,
+            'keterangan' => $this->input->post('keterangan'),
             'id_user' => get_user_id($this->session->userdata('id'))
         );
         $data['enkripsi'] = self_md5($data['id']);
@@ -330,6 +331,7 @@ class Process extends CI_Controller
             if (check_upload_file('image_upload'))
                 $data['image'] = $this->_upload($dimension, 'blanko_use');
         }
+        foreach ($data as $k => $v) if ($v == '') unset($data[$k]);
         return $data;
     }
 

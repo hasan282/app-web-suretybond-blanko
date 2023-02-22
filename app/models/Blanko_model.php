@@ -132,6 +132,7 @@ class Blanko_model extends CI_Model
             'id_use' => 'blanko_used.id AS id_use',
             'id_jaminan' => 'id_jaminan',
             'produksi' => 'blanko.laprod AS produksi',
+            'ket_used' => 'blanko_used.keterangan AS ket_used',
             'image_use' => 'blanko_used.image AS image_use',
             'id_crash' => 'blanko_crash.id AS id_crash',
             'ket_crash' => 'blanko_crash.keterangan AS ket_crash',
