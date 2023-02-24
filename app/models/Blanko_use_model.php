@@ -27,6 +27,7 @@ class Blanko_use_model extends CI_Model
             'enkripsi' => self_md5($global_id),
             'id_blanko' => $used,
             'id_jaminan' => $global_id,
+            'keterangan' => $this->input->post('keterangan'),
             'id_user' => get_user_id($this->session->userdata('id'))
         );
         if (check_upload_file('image_upload')) {

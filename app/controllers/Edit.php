@@ -7,7 +7,7 @@ class Edit extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $config = array('new_line_remove' => true);
+        $config = array('new_line_remove' => false);
         $this->load->library('Layout_library', $config, 'layout');
         $this->load->library('Plugin_library', null, 'plugin');
         $this->load->library('form_validation', null, 'forms');
@@ -65,7 +65,12 @@ class Edit extends CI_Controller
             }
             if (!empty($blankodata) && $this->office['id'] == $blankodata['office_id']) {
                 // var_dump($blankodata);
-                $this->_status_view($blankodata);
+                $change = self_decrypt($this->input->post('statuschange'));
+                if ($change === false) {
+                    $this->_status_view($blankodata);
+                } else {
+                    var_dump(explode(',', $change));
+                }
             } else {
                 custom_404_admin();
             }
@@ -209,16 +214,17 @@ class Edit extends CI_Controller
 
     private function _status_view($blankodata)
     {
+        $this->load->model('Status_model', 'stats');
         $data['title'] = 'Ubah Status Blanko';
         $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput';
         $data['bread'] = 'Blanko List,blanko/used|' . $blankodata['nomor'] . ',blanko/detail/' . $blankodata['enkripsi'] . '|Ubah Status';
-        $data['jscript'] = 'process/used.min';
-        $data['statusedit'] = false;
+        $data['statusedit'] = $this->stats->gets($blankodata['enkripsi'])->data();
         $data['blanko'] = $blankodata;
         $this->layout->variable($data);
         $this->layout->content('blanko/detail');
         $this->layout->content('edit/status');
         $this->layout->script()->print();
+        // var_dump($data['statusedit']);
     }
 
     private function _guarantee_view($blanko)
