@@ -64,12 +64,12 @@ class Edit extends CI_Controller
                 $blankodata = $this->lists->select($fields)->where(['enkripsi' => $param])->data();
             }
             if (!empty($blankodata) && $this->office['id'] == $blankodata['office_id']) {
-                // var_dump($blankodata);
+                $this->load->model('Status_model', 'stats');
                 $change = self_decrypt($this->input->post('statuschange'));
                 if ($change === false) {
                     $this->_status_view($blankodata);
                 } else {
-                    var_dump(explode(',', $change));
+                    $this->_status_change(explode(',', $change), $blankodata);
                 }
             } else {
                 custom_404_admin();
@@ -86,7 +86,8 @@ class Edit extends CI_Controller
             if ($param !== null) {
                 $this->load->model('Blanko_model', 'blankos');
                 $blankodata = $this->blankos->get_one($param, array(
-                    'id', 'asuransi', 'prefix', 'nomor', 'id_office', 'id_status', 'status', 'color', 'id_jaminan'
+                    'id', 'asuransi', 'prefix', 'nomor', 'id_office',
+                    'id_status', 'status', 'color', 'id_jaminan'
                 ));
             }
             if (
@@ -112,19 +113,23 @@ class Edit extends CI_Controller
     {
         if (is_login()) {
             $tipe = array('used');
-            $blankoused = $this->db->get_where('blanko_used', array(
+            ${'blanko' . $param} = $this->db->get_where('blanko_used', array(
                 'id' => $this->input->post('used')
             ))->row();
-            if ($blankoused == null || !in_array($param, $tipe)) {
+            if (${'blanko' . $param} == null || !in_array($param, $tipe)) {
                 custom_404_admin();
             } else {
                 $directlink = 'blanko/detail/' . $this->input->post('enkrip');
                 $keterangan = $this->input->post('keterangan');
-                if ($blankoused->keterangan == $keterangan) {
+                if (${'blanko' . $param}->keterangan == $keterangan) {
                     // no edit
                     redirect($directlink);
                 } else {
-                    $result_edit = $this->db->update('blanko_used', ['keterangan' => $keterangan], ['id' => $blankoused->id]);
+                    $result_edit = $this->db->update(
+                        'blanko_' . $param,
+                        ['keterangan' => $keterangan],
+                        ['id' => ${'blanko' . $param}->id]
+                    );
                     if ($result_edit) {
                         // success
                         redirect($directlink);
@@ -214,7 +219,6 @@ class Edit extends CI_Controller
 
     private function _status_view($blankodata)
     {
-        $this->load->model('Status_model', 'stats');
         $data['title'] = 'Ubah Status Blanko';
         $data['plugin'] = 'basic|fontawesome|scrollbar|dateinput';
         $data['bread'] = 'Blanko List,blanko/used|' . $blankodata['nomor'] . ',blanko/detail/' . $blankodata['enkripsi'] . '|Ubah Status';
@@ -224,7 +228,6 @@ class Edit extends CI_Controller
         $this->layout->content('blanko/detail');
         $this->layout->content('edit/status');
         $this->layout->script()->print();
-        // var_dump($data['statusedit']);
     }
 
     private function _guarantee_view($blanko)
@@ -264,5 +267,17 @@ class Edit extends CI_Controller
         );
         if ($this->db->insert($table, $data)) $result = $data['id'];
         return $result;
+    }
+
+    private function _status_change($param = array(), $blankodata)
+    {
+        // var_dump($blankodata);
+        if ($this->stats->change($blankodata, $param)) {
+            // echo 'success';
+            redirect('blanko/detail/' . $blankodata['enkripsi']);
+        } else {
+            // echo 'failed';
+            redirect('blanko/detail/' . $blankodata['enkripsi']);
+        }
     }
 }

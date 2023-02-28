@@ -21,4 +21,62 @@ class Status_model extends SELF_Model
         $this->query = $queries;
         return $this;
     }
+
+    public function change(array $blanko, array $change = [])
+    {
+        $result_delete = $updates = array();
+        foreach ($change as $ch) {
+            $param = explode('=>', $ch);
+            switch ($param[0]) {
+                case 'status':
+                    if (sizeof($param) === 2) $updates['id_status'] = $param[1];
+                    break;
+                case 'crash':
+                    if (sizeof($param) === 2) array_push(
+                        $result_delete,
+                        $this->db->delete('blanko_crash', ['id' => $param[1]])
+                    );
+                    break;
+                case 'used':
+                    if (sizeof($param) === 2) array_push(
+                        $result_delete,
+                        $this->db->delete('blanko_used', ['id' => $param[1]])
+                    );
+                    break;
+                case 'jaminan':
+                    if (sizeof($param) === 2) array_push(
+                        $result_delete,
+                        $this->db->delete('jaminan', ['id' => $param[1]])
+                    );
+                    break;
+                case 'produksi':
+                    if (sizeof($param) === 2 && $param[1] == 'null') $updates['laprod'] = null;
+                    break;
+                case 'from':
+                    if (sizeof($param) === 2) {
+                        if ($this->db->delete('revisi', array(
+                            'id_from' => $param[1],
+                            'id_to' => $blanko['id']
+                        ))) array_push(
+                            $result_delete,
+                            $this->db->update('blanko', ['id_status' => 2], ['id' => $param[1]])
+                        );
+                    }
+                    break;
+                case 'to':
+                    if (sizeof($param) === 2) array_push(
+                        $result_delete,
+                        $this->db->delete('revisi', array('id_from' => $blanko['id'], 'id_to' => $param[1]))
+                    );
+                    break;
+                default:
+                    break;
+            }
+        }
+        $result_change = false;
+        if (!empty($result_delete) && !in_array(false, $result_delete)) {
+            $result_change = $this->db->update('blanko', $updates, ['id' => $blanko['id']]);
+        }
+        return $result_change;
+    }
 }
