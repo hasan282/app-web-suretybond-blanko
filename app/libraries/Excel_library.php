@@ -129,8 +129,17 @@ class Excel_library
                 case 'date':
                     $result_value = str_replace('-', '/', $value);
                     break;
+                case 'dateflip':
+                    $dates = explode('-', $value);
+                    if (sizeof($dates) === 3) {
+                        $result_value = $dates[2] . '/' . $dates[1] . '/' . $dates[0];
+                    }
+                    break;
                 case 'int':
                     $result_value = intval($value);
+                    break;
+                case 'float':
+                    $result_value = floatval($value);
                     break;
                 case 'to_string':
                     $result_value = "'" . $value;

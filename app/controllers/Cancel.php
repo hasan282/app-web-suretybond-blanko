@@ -67,13 +67,24 @@ class Cancel extends CI_Controller
             $delete_blanko = $this->db->delete('blanko');
             $delete_record = $this->db->delete('record_add', array('id' => $record->id));
             if ($delete_blanko && $delete_record) {
-                echo 'SUCCESS DELETE';
+                // echo 'SUCCESS DELETE';
+                redirect();
             } else {
-                echo 'FAILED DELETE';
+                // echo 'FAILED DELETE';
+                redirect();
             }
         } else {
-            echo 'CANNOT BE DELETE';
-            var_dump($blanko_check);
+            // echo 'CANNOT BE DELETE';
+            // var_dump($blanko_check);
+            redirect();
         }
+    }
+
+    private function _cancel_success()
+    {
+    }
+
+    private function _cancel_failed()
+    {
     }
 }

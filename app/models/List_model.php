@@ -89,6 +89,7 @@ class List_model extends SELF_Model
             'enkripsi' => 'blanko.enkripsi AS enkripsi',
             'prefix' => 'blanko.prefix AS prefix',
             'nomor' => 'blanko.nomor AS nomor',
+            'fullnumber' => 'CONCAT(blanko.prefix, blanko.nomor) AS fullnumber',
             'produksi' => 'blanko.laprod AS produksi',
             'asuransi' => 'asuransi.nama AS asuransi',
             'asuransi_id' => 'asuransi.id AS asuransi_id',

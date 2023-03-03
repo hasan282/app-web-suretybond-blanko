@@ -2,6 +2,29 @@ let initial_setup = false;
 let filter_values = { asuransi: false, office: false, range: false, status: false, laprod: false, tipe: false };
 $(function () {
 
+    checklist_setup({
+        changecolor: true,
+        enablesubmit: true,
+        submit: '#submitexport'
+    });
+
+    trigger_click_id([
+        'check_asuransi', 'check_fullnumber',
+        'check_status', 'check_principal',
+        'check_office'
+    ]);
+
+    $('#export_open').click(function () {
+        $('#export_card').removeClass('mw-300').addClass('mw-600');
+        $('#box_open').addClass('zero-height');
+        $('#box_process').removeClass('zero-height');
+    });
+    $('#export_close').click(function () {
+        $('#export_card').removeClass('mw-600').addClass('mw-300');
+        $('#box_process').addClass('zero-height');
+        $('#box_open').removeClass('zero-height');
+    });
+
     $('#searchnumber').on('search', function () {
         const allempty = ($('input[type="hidden"]').filter(function () {
             return ($.trim($(this).val()).length > 0);
@@ -77,6 +100,7 @@ function blanko_action() {
     } else {
         init_action(queries);
     }
+    $('#export_close').trigger('click');
 }
 
 function number_range() {
