@@ -1,6 +1,6 @@
 <a href="<?= base_url(); ?>" class="link-transparent">
-    <div class="mx-auto mb-4" style="max-width:250px">
-        <img class="img-fluid" src="<?= base_url('asset/img/icon/ptjis_surety_icon.png'); ?>" alt="">
+    <div class="mx-auto mb-2" style="max-width:300px">
+        <img class="img-fluid" src="<?= base_url('asset/img/icon/jis_suretybond.png'); ?>" alt="">
     </div>
 </a>
 <div class="card">

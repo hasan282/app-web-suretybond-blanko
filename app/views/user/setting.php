@@ -29,30 +29,30 @@ if ($msg_text != null) : ?>
                         <img src="<?= base_url('asset/img/user/' . $this->session->userdata('foto')); ?>" class="img-circle elevation-1" alt="">
                     </div>
                     <div class="info mr-auto">
-                        <a href="#" class="link-black text-bold">Ganti Foto Profil<i class="fas fa-edit ml-2"></i></a>
+                        <a href="<?= base_url('user/photo'); ?>" class="link-black text-bold">Ganti Foto Profil<i class="fas fa-edit ml-2"></i></a>
                     </div>
                 </div>
-
-                <div class="mw-300 mx-auto">
-                    <div class="form-group">
-                        <label for="real_name">Nama Lengkap</label>
-                        <input name="real_name" id="real_name" class="form-control" value="<?= $this->session->userdata('nama'); ?>">
+                <form action="<?= base_url('user/edit'); ?>" method="POST">
+                    <div class="mw-300 mx-auto">
+                        <div class="form-group">
+                            <label for="real_name">Nama Lengkap</label>
+                            <input name="real_name" id="real_name" class="form-control" value="<?= $this->session->userdata('nama'); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="set_username">Username</label>
+                            <input name="set_username" id="set_username" class="form-control" value="<?= $this->session->userdata('user'); ?>">
+                            <small class="text-secondary ml-2"><i>karakter huruf kecil dan angka ( a~z 0~9 )</i></small>
+                        </div>
+                        <div class="border-fade py-2 text-center text-bold">
+                            <button type="button" class="btn btn-link text-bold p-0" data-toggle="modal" data-target="#pwdModal">
+                                <i class="fas fa-lock mr-2"></i>Ganti Password
+                            </button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="set_username">Username</label>
-                        <input name="set_username" id="set_username" class="form-control" value="<?= $this->session->userdata('user'); ?>">
-                        <small class="text-secondary ml-2"><i>karakter huruf kecil dan angka ( a~z 0~9 )</i></small>
+                    <div class="text-center mt-5">
+                        <button class="btn btn-primary text-bold"><i class="fas fa-save mr-2"></i>Simpan Perubahan</button>
                     </div>
-                    <div class="border-fade py-2 text-center text-bold">
-                        <button type="button" class="btn btn-link text-bold p-0" data-toggle="modal" data-target="#pwdModal">
-                            <i class="fas fa-lock mr-2"></i>Ganti Password
-                        </button>
-                    </div>
-                </div>
-                <div class="text-center mt-5">
-                    <button class="btn btn-primary text-bold" disabled><i class="fas fa-save mr-2"></i>Simpan Perubahan</button>
-                </div>
-
+                </form>
             </div>
         </div>
     </div>

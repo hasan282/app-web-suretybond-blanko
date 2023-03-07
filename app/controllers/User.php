@@ -9,8 +9,10 @@ class User extends CI_Controller
         parent::__construct();
         $this->load->library('Plugin_library', null, 'plugin');
         $this->load->library('form_validation', null, 'forms');
-        $this->load->helper(['login', 'user', 'id', 'enkrip', 'error']);
+        $this->load->helper(['login', 'user', 'id', 'enkrip', 'error', 'image']);
         $this->office = (array) get_user_office($this->session->userdata('id'));
+        $config = array('new_line_remove' => true);
+        $this->load->library('Layout_library', $config, 'layout');
     }
 
     public function index()
@@ -18,12 +20,9 @@ class User extends CI_Controller
         if (is_login()) {
             $data['title'] = 'User';
             $data['plugin'] = 'basic|fontawesome|scrollbar';
-            $this->load->view('template/head', $data);
-            $this->load->view('template/navbar');
-            $this->load->view('template/sidebar');
-            $this->load->view('user/main');
-            $this->load->view('template/footer');
-            $this->load->view('template/foot');
+            $this->layout->variable($data);
+            $this->layout->content('user/main');
+            $this->layout->script()->print();
         } else {
             redirect(login_url());
         }
@@ -55,8 +54,6 @@ class User extends CI_Controller
         $data['plugin'] = 'basic|fontawesome|scrollbar';
         $data['jscript'] = 'user/setting';
         $data['office'] = $this->office;
-        $config = array('new_line_remove' => true);
-        $this->load->library('Layout_library', $config, 'layout');
         $this->layout->variable($data);
         $this->layout->content('user/setting');
         $this->layout->script()->print();
@@ -194,6 +191,142 @@ class User extends CI_Controller
         }
     }
 
+    public function edit()
+    {
+        if (is_login() && !empty($_POST)) {
+            $username = $this->input->post('set_username');
+            $realname = $this->input->post('real_name');
+            $change_user = $username != $this->session->userdata('user');
+            $change_name = $realname != $this->session->userdata('nama');
+            if (
+                !$change_user && !$change_name ||
+                ($username == '' || $realname == '')
+            ) {
+                // no edit
+                redirect('user/setting');
+            } else {
+                $dataedit = array();
+                $datasession = array();
+                if ($change_name) {
+                    $datasession['nama'] = $realname;
+                    $dataedit['nama'] = $realname;
+                }
+                if ($change_user) {
+                    $users = $this->db->get_where('user', ['username' => $username])->num_rows();
+                    if ($users === 0) {
+                        $datasession['user'] = $username;
+                        $dataedit['username'] = $username;
+                    } else {
+                        $this->session->set_flashdata('type', 'danger');
+                        $this->session->set_flashdata('text', 'Username telah digunakan user lain');
+                    }
+                }
+                if (!empty($dataedit)) {
+                    $resultedit = $this->db->update('user', $dataedit, [
+                        'enkripsi' => $this->session->userdata('id')
+                    ]);
+                    if ($resultedit) {
+                        // success
+                        $this->session->set_userdata($datasession);
+                        $this->session->set_flashdata('type', 'success');
+                        $this->session->set_flashdata('text', 'Profil User Telah Diubah');
+                    } else {
+                        // failed
+                    }
+                }
+                redirect('user/setting');
+            }
+        } else {
+            redirect('user/setting');
+        }
+    }
+
+    public function photo($param = null)
+    {
+        if (is_login()) {
+            if ($param === null) {
+                $this->_photo_view();
+            } else {
+                switch ($param) {
+                    case 'male':
+                        $this->_photo_change('user_default_male.jpg');
+                        break;
+                    case 'female':
+                        $this->_photo_change('user_default_female.jpg');
+                        break;
+                    case 'new':
+                        $this->_photo_new();
+                        break;
+                    default:
+                        custom_404_admin();
+                        break;
+                }
+            }
+        } else {
+            redirect(login_url());
+        }
+    }
+
+    private function _photo_view()
+    {
+        $data['title'] = 'Pengaturan Foto Profil';
+        $data['bread'] = 'User,user|Pengaturan,user/setting|Foto Profil';
+        $data['plugin'] = 'basic|fontawesome|scrollbar|fileinput';
+        // $data['jscript'] = 'user/setting';
+        // $data['office'] = $this->office;
+        $this->layout->variable($data);
+        $this->layout->content('user/photo');
+        $this->layout->script()->print();
+    }
+
+    private function _photo_change($photo)
+    {
+        $result = $this->db->update(
+            'user',
+            ['photo' => $photo],
+            ['enkripsi' => $this->session->userdata('id')]
+        );
+        if ($result) {
+            // success
+            $this->session->set_userdata(['foto' => $photo]);
+            redirect('user/setting');
+        } else {
+            // failed
+            redirect('user/setting');
+        }
+    }
+
+    private function _photo_new()
+    {
+        if (!empty($_POST) && check_upload_file('image_upload')) {
+            $dimension = array(
+                'width' => intval($this->input->post('inp_width')),
+                'height' => intval($this->input->post('inp_height'))
+            );
+            // var_dump($_POST);
+            $new_photo = $this->_upload($dimension);
+            if ($new_photo != '') {
+                if ($this->db->update(
+                    'user',
+                    ['photo' => $new_photo],
+                    ['enkripsi' => $this->session->userdata('id')]
+                )) {
+                    // success
+                    $this->session->set_userdata(['foto' => $new_photo]);
+                    redirect('user/setting');
+                } else {
+                    // failed update
+                    redirect('user/setting');
+                }
+            } else {
+                // failed upload
+                redirect('user/setting');
+            }
+        } else {
+            redirect('user/setting');
+        }
+    }
+
     public function logout()
     {
         $this->session->unset_userdata(
@@ -201,5 +334,68 @@ class User extends CI_Controller
         );
         $this->session->sess_destroy();
         redirect('', 'refresh');
+    }
+
+    private function _upload()
+    {
+        $uploaded_file = '';
+        $max_pixel = 400;
+        $upload_config = array(
+            'upload_path' => './asset/img/user/',
+            'allowed_types' => 'jpg|jpeg|gif|png|bmp',
+            'file_name' => 'user_' . self_md5(date('Ymd_His'), '_1m4935' . mt_rand(1000, 9999))
+        );
+        $this->load->library('upload', $upload_config);
+        if ($this->upload->do_upload('image_upload')) {
+            $upload_data = $this->upload->data();
+            $uploaded_file = $upload_data['file_name'];
+            $this->load->library('image_lib');
+            $dimension = array(
+                'width' => $upload_data['image_width'],
+                'height' => $upload_data['image_height']
+            );
+            if ($dimension['width'] != $dimension['height']) {
+                $uploaded_file = $this->_crop($upload_data, $dimension);
+            }
+            if ($dimension['height'] > $max_pixel && $dimension['width'] > $max_pixel) {
+                $uploaded_file = $this->_resize($upload_data, $max_pixel, $uploaded_file);
+            }
+            var_dump($upload_data);
+        }
+        return $uploaded_file;
+    }
+
+    private function _crop($data, $dimension)
+    {
+        $sizes = ($dimension['width'] > $dimension['height']) ? $dimension['height'] : $dimension['width'];
+        $crop_config = array(
+            'source_image' => $data['full_path'],
+            'new_image' => $data['file_path'] . $data['raw_name'] . '_crop' . $data['file_ext'],
+            'x_axis' => floor(($dimension['width'] - $sizes) / 2),
+            'y_axis' => floor(($dimension['height'] - $sizes) / 2),
+            'maintain_ratio' => false,
+            'width' => $sizes,
+            'height' => $sizes
+        );
+        $this->image_lib->clear();
+        $this->image_lib->initialize($crop_config);
+        $this->image_lib->crop();
+        unlink($crop_config['source_image']);
+        return $data['raw_name'] . '_crop' . $data['file_ext'];
+    }
+
+    private function _resize($data, $maxpixel, $filename)
+    {
+        $resize_config = array(
+            'source_image' => $data['file_path'] . $filename,
+            'new_image' => $data['file_path'] . 'resize_' . $filename,
+            'width' => $maxpixel,
+            'height' => $maxpixel
+        );
+        $this->image_lib->clear();
+        $this->image_lib->initialize($resize_config);
+        $this->image_lib->resize();
+        unlink($resize_config['source_image']);
+        return 'resize_' . $filename;
     }
 }
