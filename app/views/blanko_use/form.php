@@ -50,7 +50,7 @@
                         <textarea class="form-control" name="pekerjaan" id="pekerjaan" rows="2" placeholder="Pekerjaan"></textarea>
                     </div>
                     <label>Jaminan Berlaku <span class="text-danger">*</span></label>
-                    <div class="border-fade pt-3 pr-3">
+                    <div class="border-fade pt-3 pr-3 mb-3">
                         <?php $input_date = array('tanggal_from' => 'Mulai', 'tanggal_to' => 'Sampai');
                         foreach ($input_date as $id => $titles) : ?>
                             <div class="form-group row ml-xl-0 ml-2">
@@ -73,6 +73,14 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group mw-400">
+                        <label for="dn_number">Nomor DN</label>
+                        <input id="dn_number" class="form-control" placeholder="No. DN" disabled>
+                    </div>
+                    <div class="form-group mw-400">
+                        <label for="cn_num">Nomor CN</label>
+                        <input id="cn_num" class="form-control" placeholder="No. CN" disabled>
                     </div>
                     <div class="text-center pt-3">
                         <button type="button" id="show_keterangan" data-show="0" class="btn btn-sm btn-link">

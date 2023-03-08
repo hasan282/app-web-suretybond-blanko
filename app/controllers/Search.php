@@ -41,7 +41,7 @@ class Search extends SELF_Controller
     {
         $fields = array(
             'asuransi' => 'Asuransi',
-            'fullnumber' => 'Nomor Blanko',
+            'fullnumber' => 'Nomor Blanko|prefix_space',
             'status' => 'Status',
             'jaminan_tipe1' => 'Jenis Jaminan',
             'jaminan' => 'Nomor Jaminan',

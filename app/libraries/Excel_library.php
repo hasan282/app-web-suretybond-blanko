@@ -144,6 +144,9 @@ class Excel_library
                 case 'to_string':
                     $result_value = "'" . $value;
                     break;
+                case 'prefix_space':
+                    $result_value = " " . $value;
+                    break;
                 default:
                     $result_value = strval($value);
                     break;
