@@ -1,4 +1,5 @@
 <?php
+$pemakaian = $this->db->query('SELECT pemakaian.bulan AS month FROM pemakaian INNER JOIN blanko ON blanko.id = pemakaian.id_blanko WHERE blanko.enkripsi = ?', self_md5($blanko['id']))->row();
 $is_null = true;
 $datenow =  date('Y-m-d');
 $datesplit = explode('-', $datenow);
@@ -12,7 +13,7 @@ $months = explode(',', 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,Septe
         <div class="card-body">
 
             <div class="text-center">
-                <form action="<?= base_url('production'); ?>" method="POST">
+                <form action="<?= base_url('production/sub'); ?>" method="POST">
                     <input type="hidden" id="blanko" name="blanko" value="<?= self_md5($blanko['id']); ?>">
                     <input type="hidden" id="month" name="month" value="<?= format_date($datenow, 'YY2-MM1'); ?>">
                     <input type="hidden" id="showmonth" value="<?= $dateshow; ?>">
@@ -41,6 +42,8 @@ $months = explode(',', 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,Septe
                     </button>
                 </form>
             </div>
+
+            <?php var_dump($pemakaian); ?>
 
         </div>
     </div>

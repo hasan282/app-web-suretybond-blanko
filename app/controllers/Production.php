@@ -145,5 +145,32 @@ class Production extends SELF_Controller
 
     public function sub()
     {
+        if (is_login()) {
+            $blanko = $this->db->get_where(
+                'blanko',
+                ['enkripsi' => $this->input->post('blanko')]
+            )->row();
+            if ($blanko === null) {
+                redirect('blanko/used');
+            } else {
+                $result = false;
+                $month = $this->db->get_where('pemakaian', ['id_blanko' => $blanko->id])->row();
+                if ($month === null) {
+                    $result = $this->db->insert('pemakaian', array(
+                        'id_blanko' => $blanko->id,
+                        'bulan' => $this->input->post('month')
+                    ));
+                }
+                if ($result) {
+                    // success
+                    redirect('blanko/detail/' . $blanko->enkripsi);
+                } else {
+                    // failed
+                    redirect('blanko');
+                }
+            }
+        } else {
+            redirect();
+        }
     }
 }
