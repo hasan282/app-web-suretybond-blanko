@@ -1,7 +1,7 @@
 <?php
 $pemakaian = $this->db->query('SELECT pemakaian.bulan AS month FROM pemakaian INNER JOIN blanko ON blanko.id = pemakaian.id_blanko WHERE blanko.enkripsi = ?', self_md5($blanko['id']))->row();
-$is_null = true;
-$datenow =  date('Y-m-d');
+$is_null = ($pemakaian === null);
+$datenow = ($is_null) ? date('Y-m-d') : $pemakaian->month . '-01';
 $datesplit = explode('-', $datenow);
 $dateshow = format_date($datenow, 'MM3 YY2');
 $yearnow = intval(date('Y')) + 1;
@@ -11,8 +11,18 @@ $months = explode(',', 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,Septe
 <div class="mx-auto mw-400">
     <div class="card">
         <div class="card-body">
-
-            <div class="text-center">
+            <?php if (!$is_null) : ?>
+                <div id="title_box" class="text-center">
+                    <h6 class="text-bold text-secondary mb-0">
+                        Penggunaan Bulan <?= format_date($pemakaian->month . '-1', 'MM3 YY2'); ?>
+                        <span id="edit_month" class="ml-2 link-transparent show-tooltip" title="Ubah Bulan"><i class="fas fa-edit"></i></span>
+                    </h6>
+                </div>
+            <?php endif; ?>
+            <div id="setup_box" class="text-center<?= ($is_null) ? '' : ' zero-height'; ?>">
+                <?php if (!$is_null) : ?>
+                    <button id="cancel_btn" type="button" class="btn btn-default btn-sm mb-4"><i class="fas fa-times mr-2"></i>Batalkan</button>
+                <?php endif; ?>
                 <form action="<?= base_url('production/sub'); ?>" method="POST">
                     <input type="hidden" id="blanko" name="blanko" value="<?= self_md5($blanko['id']); ?>">
                     <input type="hidden" id="month" name="month" value="<?= format_date($datenow, 'YY2-MM1'); ?>">
@@ -42,9 +52,6 @@ $months = explode(',', 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,Septe
                     </button>
                 </form>
             </div>
-
-            <?php var_dump($pemakaian); ?>
-
         </div>
     </div>
 </div>

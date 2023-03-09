@@ -160,6 +160,12 @@ class Production extends SELF_Controller
                         'id_blanko' => $blanko->id,
                         'bulan' => $this->input->post('month')
                     ));
+                } else {
+                    $result = $this->db->update('pemakaian', array(
+                        'bulan' => $this->input->post('month')
+                    ), array(
+                        'id_blanko' => $blanko->id
+                    ));
                 }
                 if ($result) {
                     // success
