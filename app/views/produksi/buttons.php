@@ -5,8 +5,8 @@
         window.location.href = url_to;
     }
 </script>
-<div class="card">
-    <div class="card-body row">
+<div class="card mb-1">
+    <div class="card-body row p-2">
         <div class="col-md text-md-left text-center">
             <div class="btn-group btn-group-toggle mb-md-0 mb-2" data-toggle="buttons">
                 <?php $list_option = array(

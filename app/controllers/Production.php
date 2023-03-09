@@ -43,8 +43,13 @@ class Production extends SELF_Controller
         );
         $data['jscript'] = 'functions/check|produksi/main';
         $this->layout->variable($data);
+        $this->layout->content('produksi/filters');
         $this->layout->content('produksi/buttons');
-        $this->layout->content('produksi/used_list');
+        if (empty($data['blankodata']['data'])) {
+            $this->layout->content('produksi/empty');
+        } else {
+            $this->layout->content('produksi/used_list');
+        }
         $this->layout->script()->print();
     }
 
@@ -136,5 +141,9 @@ class Production extends SELF_Controller
         } else {
             custom_404_admin();
         }
+    }
+
+    public function sub()
+    {
     }
 }
