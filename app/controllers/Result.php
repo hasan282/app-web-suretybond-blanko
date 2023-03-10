@@ -52,6 +52,7 @@ class Result extends CI_Controller
                 $data['plugin'] = 'basic|fontawesome|scrollbar';
                 $data['bread'] = 'Blanko List,blanko|Kirim,blanko/send|Hasil';
                 $data['result'] = $data_send;
+                $data['parameter'] = $id;
                 $this->load->view('template/head', $data);
                 $this->load->view('template/navbar');
                 $this->load->view('template/sidebar');
