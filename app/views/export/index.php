@@ -1,9 +1,11 @@
-<html>
+<html lang="en">
 
 <head>
-    <!-- bootstrap style -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <TITLE>jsPDF HTML Example with html2canvas for Multiple Pages PDF</TITLE>
+    <title>PDF Export - Tanda Terima</title>
     <style>
         #doc-target {
             font-family: sans-serif;
@@ -30,20 +32,25 @@
         <div id="outer">
             <div id="doc-target">
                 <div class="row">
-                    <div class="mr-auto ml-3">
-                        <img src="<?php echo base_url('asset/img/export/jis_suretybond.jpg'); ?>" alt="" height="75px" width="75px">
+                    <div class="col ml-3">
+                        <img src="<?= base_url('asset/img/icon/jis_logo.jpg'); ?>" alt="" height="75px" width="75px">
                     </div>
-                    <div class="ml-auto text-right">
-                        <p class="m-0" style="font-size: 10px;">PT. JASMINE INDAH SERVISTAMA</p>
-                        <p class="m-0" style="font-size: 10px;">Email: rochman.jis@gmail.com</p>
-                        <p class="m-0" style="font-size: 10px;">jasmine.surety@gmail.com</p>
+                    <div class="col text-right">
+                        <p class="my-0 mr-3" style="font-size: 10px;">PT. JASMINE INDAH SERVISTAMA</p>
+                        <p class="my-0 mr-3" style="font-size: 10px;">Email: rochman.jis@gmail.com</p>
+                        <p class="my-0 mr-3" style="font-size: 10px;">jasmine.surety@gmail.com</p>
                     </div>
                 </div>
                 <div class="my-3 text-center">
-                    <h5 class="text-uppercase" style="font-size: 10px;"><strong>Tanda Terima</strong></h5>
-                    <h5 class="text-uppercase" style="font-size: 10px;"><strong>Blanko .... TTD Pak Ricky
-                            firmansyah</strong></h5>
-                    <h5 style="font-size: 10px;"> <strong>UP : Bpk. Amiruddin</strong> </h5>
+                    <h5 class="text-uppercase" style="font-size: 10px;">
+                        <strong>TANDA TERIMA BLANKO</strong>
+                    </h5>
+                    <h5 class="text-uppercase" style="font-size: 10px;">
+                        <strong>PT. ASURANSI MAXIMUS</strong>
+                    </h5>
+                    <h5 style="font-size: 10px;">
+                        <strong>UP : Bpk. Amiruddin</strong>
+                    </h5>
                 </div>
                 <div class="row justify-content-center align-content-center">
                     <?php
@@ -52,9 +59,7 @@
                     $number_first = 0;
                     $number_last = $max_number - 1;
                     $cols = ceil($count_data / $max_number);
-                    for ($i = 0; $i < $cols; $i++) :
-
-                    ?>
+                    for ($i = 0; $i < $cols; $i++) : ?>
                         <div class="col-lg-3">
                             <table class="table table-bordered table-sm" style="font-size: 10px;">
                                 <thead>
@@ -84,7 +89,6 @@
                         </div>
                     <?php endfor; ?>
                 </div>
-
                 <div class="row">
                     <div class="col-lg-4">
                         <h5 style="font-size: 10px;"> <strong>Dikirim Oleh : </strong> </h5>
@@ -107,7 +111,6 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
     <script>
         // https://html2canvas.hertzen.com/configuration
         // https://rawgit.com/MrRio/jsPDF/master/docs/module-html.html#~html
