@@ -35,7 +35,7 @@ class Production extends SELF_Controller
 
     private function _index_view()
     {
-        $blankos = $this->production->select()->where(null)->order();
+        $blankos = $this->production->select()->where(null)->filter($this->filter)->order();
         $data['title'] = 'Produksi';
         $data['plugin'] = 'basic|fontawesome|scrollbar|icheck';
         $data['pagination'] = array(
@@ -133,11 +133,21 @@ class Production extends SELF_Controller
 
     public function setlist($limit = null, $number = null)
     {
+        $filters = explode('-and-', $this->input->get('filter'));
+        if (sizeof($filters) === 3) {
+            $filname = array('asuransi', 'office', 'pemakaian');
+            $fil = array();
+            foreach ($filname as $ky => $fn) if ($filters[$ky] != '') $fil[$fn] = $filters[$ky];
+            if (!empty($fil)) $this->session->set_flashdata('page_filter', $fil);
+        }
+
         if ($limit != null)
             $this->session->set_flashdata('page_limit', $limit);
         if ($number != null)
             $this->session->set_flashdata('page_number', $number);
         redirect($this->input->get('log'));
+
+        // var_dump($filters);
     }
 
     public function setmonth()

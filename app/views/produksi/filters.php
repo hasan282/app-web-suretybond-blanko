@@ -39,7 +39,9 @@ $data_office = $this->db->query('SELECT id, nama FROM office ORDER BY id_tipe, n
                 <div class="col-md-4 col-sm-6">
                     <div class="form-group">
                         <label for="laprod">Laporan Pemakaian</label>
-                        <select name="laprod" id="laprod" class="form-control filterselect" disabled></select>
+                        <select name="laprod" id="laprod" class="form-control filterselect" disabled>
+                            <option value="" selected>---</option>
+                        </select>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <script>
-    function setup_list_page(limit, page) {
+    function setup_list_page(limit, page, add = '') {
         let url_to = '<?= base_url('production/setlist/'); ?>' + limit + '/' + page;
-        url_to += '?log=production';
+        url_to += '?log=production' + add;
         window.location.href = url_to;
     }
 </script>
@@ -39,7 +39,9 @@
         $('#filterbutton').click(function() {
             const asuransi = $('#asuransi').val();
             const office = $('#office').val();
-            console.log(asuransi + '---' + office);
+            const laprod = $('#laprod').val();
+            const limit = $('[name="dataview"]:checked').val();
+            setup_list_page(limit, 1, '&filter=' + asuransi + '-and-' + office + '-and-' + laprod);
         });
     });
 </script>
