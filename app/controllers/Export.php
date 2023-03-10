@@ -80,4 +80,22 @@ class Export extends CI_Controller
             }
         }
     }
+
+    public function sent($param = null)
+    {
+        $numbers = array();
+        $this->load->database();
+        $datasent = (array) $this->db->get_where('record_sent', ['enkripsi' => $param])->row();
+        if (!empty($datasent)) {
+            $this->load->model('List_model', 'lists');
+            $numbers = $this->lists->select(['fullnumber'])->where([
+                'asuransi' => self_md5($datasent['id_asuransi'])
+            ])->between([$datasent['number_from'], $datasent['number_to']])->data_list();
+        }
+        $data['datasent'] = $numbers;
+        $this->load->view('export/index', $data);
+
+
+        // var_dump($numbers);
+    }
 }
