@@ -29,6 +29,18 @@
         <p class="mt-3 text-center">
             <button class="btn btn-outline-primary" onclick="generatePdf()">Buat PDF</button>
         </p>
+        <div class="container w-25">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Input Note Title:</label>
+                <input type="text" class="form-control" id="input_note_title" aria-describedby="emailHelp" placeholder="ex : UP : Bpk. siapa">
+            </div>
+            <button id="submit1" class="btn btn-primary mb-3">Submit</button>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Input Note Footer:</label>
+                <input type="text" class="form-control" id="input_note_footer" placeholder="ex : Dikirim Oleh ini">
+            </div>
+            <button id="submit2" class="btn btn-primary mb-3">Submit</button>
+        </div>
         <div id="outer">
             <div id="doc-target">
                 <div class="row">
@@ -49,7 +61,7 @@
                         <strong>PT. ASURANSI MAXIMUS</strong>
                     </h5>
                     <h5 style="font-size: 10px;">
-                        <strong>UP : Bpk. Amiruddin</strong>
+                        <strong id="target1">UP : Bpk. Amiruddin</strong>
                     </h5>
                 </div>
                 <div class="row justify-content-center align-content-center">
@@ -101,9 +113,7 @@
                         <h5 style="font-size: 10px;"> <strong>Tanggal : </strong> </h5>
                     </div>
                     <div class="col-lg-4">
-                        <h5 style="font-size: 10px;"> <strong>NOTE : </strong> </h5>
-                        <h5 style="font-size: 10px;"> <strong>TTD ATAS NAMA : RICKY FIRMANSYAH</strong> </h5>
-                        <h5 style="font-size: 10px;"> <strong>JABATAN : Branch Manager</strong> </h5>
+                        <h5 style="font-size: 10px;"><strong>Note :</strong> <strong id="target2"></strong> </h5>
                     </div>
                 </div>
             </div>
@@ -111,6 +121,7 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js" integrity="sha512-AFwxAkWdvxRd9qhYYp1qbeRZj6/iTNmJ2GFwcxsMOzwwTaRwz2a/2TX225Ebcj3whXte1WGQb38cXE5j7ZQw3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         // https://html2canvas.hertzen.com/configuration
         // https://rawgit.com/MrRio/jsPDF/master/docs/module-html.html#~html
@@ -144,7 +155,26 @@
 
             jsPdf.html(htmlElement, opt);
         }
+
+        $(document).ready(function() {
+
+            $("#submit1").click(function() {
+                var nilai = $("#input_note_title").val();
+                $("#target1").html(nilai);
+            })
+
+        });
+
+        $(document).ready(function() {
+
+            $("#submit2").click(function() {
+                var nilai = $("#input_note_footer").val();
+                $("#target2").html(nilai);
+            })
+
+        });
     </script>
+
 </body>
 
 </html>
