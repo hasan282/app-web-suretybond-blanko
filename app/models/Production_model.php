@@ -6,6 +6,7 @@ class Production_model extends Data_model
     public function __construct()
     {
         parent::__construct();
+        $this->binds = array();
     }
 
     public function select()
@@ -22,7 +23,7 @@ class Production_model extends Data_model
             $this->query .= ' AND blanko.laprod IS NULL';
         } else {
             $this->query .= ' AND blanko.laprod = ?';
-            $this->binds = $where;
+            if (is_array($this->binds)) array_push($this->binds, $where);
         }
         return $this;
     }
@@ -30,10 +31,16 @@ class Production_model extends Data_model
     public function filter($filter = [])
     {
         $filters = array(
-            'asuransi' => '',
-            'office' => '',
+            'asuransi' => 'asuransi.enkripsi = ?',
+            'office' => 'office.id = ?',
             'pemakaian' => ''
         );
+        foreach (array_keys($filters) as $key) if (!in_array($key, array_keys($filter))) unset($filters[$key]);
+        if (!empty($filters)) {
+            $this->query .= ' AND ' . implode(' AND ', array_values($filters));
+            if (is_array($this->binds)) $this->binds = array_merge($this->binds, array_values($filter));
+        }
+        return $this;
     }
 
     public function order()
