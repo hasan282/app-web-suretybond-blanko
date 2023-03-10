@@ -1,57 +1,32 @@
-<?php $month_list = 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember';
-$months = explode(',', $month_list);
-$datenow = date('Y-m-d');
-$dateshow = format_date($datenow, 'MM3 YY2');
+<?php
+$pemakaian = $this->db->query('SELECT pemakaian.bulan AS month FROM pemakaian INNER JOIN blanko ON blanko.id = pemakaian.id_blanko WHERE blanko.enkripsi = ?', self_md5($blanko['id']))->row();
+$is_null = ($pemakaian === null);
+$datenow = ($is_null) ? date('Y-m-d') : $pemakaian->month . '-01';
 $datesplit = explode('-', $datenow);
+$dateshow = format_date($datenow, 'MM3 YY2');
 $yearnow = intval(date('Y')) + 1;
-$yearfrom = 2015; ?>
-<form action="<?= base_url(uri_string()) ?>" method="POST">
-    <div class="card mb-2">
-        <div class="card-header">
-            <h3 class="card-title">Blanko Terpakai <span class="text-bold text-olive"><?= $blankodata['page']; ?></span> Data</h3>
-        </div>
-        <div class="card-body table-responsive p-0">
-            <table class="table table-hover text-nowrap">
-                <thead>
-                    <tr>
-                        <th class="text-center py-0 align-middle">
-                            <div class="icheck-secondary">
-                                <input type="checkbox" id="checkall">
-                                <label for="checkall"></label>
-                            </div>
-                        </th>
-                        <th class="text-center">Nomor Blanko</th>
-                        <th class="text-center border-right">Status</th>
-                        <th>Nomor Jaminan</th>
-                        <th>Principal</th>
-                        <th class="text-center border-left">Pemakai</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($blankodata['data'] as $bd) : ?>
-                        <tr>
-                            <td class="py-0 text-center align-middle">
-                                <div class="icheck-primary">
-                                    <input type="checkbox" class="checkone" name="check_<?= $bd['enkripsi']; ?>" id="check_<?= $bd['enkripsi']; ?>">
-                                    <label for="check_<?= $bd['enkripsi']; ?>"></label>
-                                </div>
-                            </td>
-                            <td class="text-center"><span class="text-secondary"><?= $bd['prefix']; ?></span><span class="text-bold"><?= $bd['nomor']; ?></span></td>
-                            <td class="text-center border-right text-bold text-<?= $bd['color']; ?>"><?= $bd['status']; ?></td>
-                            <td class="border-right"><?= ($bd['jaminan'] == null) ? '-' : $bd['jaminan']; ?></td>
-                            <td><?= ($bd['principal'] == null) ? '-' : $bd['principal']; ?></td>
-                            <td class="text-center border-left text-bold"><?= $bd['office_nick']; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="mw-400 mx-auto">
-        <div class="card">
-            <div class="card-body p-2">
-                <div class="text-center">
+$yearfrom = 2015;
+$months = explode(',', 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember');
+?>
+<div class="mx-auto mw-400">
+    <div class="card">
+        <div class="card-body">
+            <?php if (!$is_null) : ?>
+                <div id="title_box" class="text-center">
+                    <h6 class="text-bold text-secondary mb-0">
+                        Penggunaan Bulan <?= format_date($pemakaian->month . '-1', 'MM3 YY2'); ?>
+                        <span id="edit_month" class="ml-2 link-transparent show-tooltip" title="Ubah Bulan"><i class="fas fa-edit"></i></span>
+                    </h6>
+                </div>
+            <?php endif; ?>
+            <div id="setup_box" class="text-center<?= ($is_null) ? '' : ' zero-height'; ?>">
+                <?php if (!$is_null) : ?>
+                    <button id="cancel_btn" type="button" class="btn btn-default btn-sm mb-4"><i class="fas fa-times mr-2"></i>Batalkan</button>
+                <?php endif; ?>
+                <form action="<?= base_url('production/sub'); ?>" method="POST">
+                    <input type="hidden" id="blanko" name="blanko" value="<?= self_md5($blanko['id']); ?>">
                     <input type="hidden" id="month" name="month" value="<?= format_date($datenow, 'YY2-MM1'); ?>">
+                    <input type="hidden" id="showmonth" value="<?= $dateshow; ?>">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button type="button" id="prevmonth" class="btn btn-default"><i class="fas fa-chevron-left"></i></button>
@@ -68,21 +43,30 @@ $yearfrom = 2015; ?>
                                 <option <?= (intval($datesplit[0]) == $yr) ? 'selected ' : ''; ?>value="<?= $yr; ?>"><?= $yr; ?></option>
                             <?php endfor; ?>
                         </select>
-
                         <div class="input-group-append">
                             <button type="button" id="nextmonth" class="btn btn-default"><i class="fas fa-chevron-right"></i></button>
                         </div>
                     </div>
-                    <button type="submit" id="submitreport" class="btn btn-primary text-bold" disabled>
+                    <button type="submit" id="submitreport" class="btn btn-primary text-bold">
                         <i class="fas fa-external-link-square-alt mr-2"></i>Jadikan Laporan <span id="btnmonth"><?= $dateshow; ?></span>
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
-</form>
+</div>
 <script>
     $(function() {
+        <?php if (!$is_null) : ?>
+            $('#edit_month').click(function() {
+                $('#title_box').addClass('zero-height');
+                $('#setup_box').removeClass('zero-height');
+            });
+            $('#cancel_btn').click(function() {
+                $('#setup_box').addClass('zero-height');
+                $('#title_box').removeClass('zero-height');
+            });
+        <?php endif; ?>
         $('#prevmonth').click(function() {
             change_month(-1)
         });

@@ -100,8 +100,13 @@ class Blanko extends CI_Controller
         }
         if ($blanko_data['id_crash'] != null)
             $this->layout->content('blanko/detail_crash');
-        if ($blanko_data['id_status'] != '1' && $officedata->id_tipe == '1' && special_access([1, 2]))
-            $this->layout->content('produksi/detail');
+        if ($blanko_data['id_status'] != '1') {
+            if ($officedata->id_tipe == '1' && special_access([1, 2])) {
+                $this->layout->content('produksi/detail');
+            } else {
+                $this->layout->content('produksi/detail_subagen');
+            }
+        }
         if ($blanko_data['id_office'] == $officedata->id)
             $this->layout->content('blanko/detail_buttons');
         $this->layout->script()->print();

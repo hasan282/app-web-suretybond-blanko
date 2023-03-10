@@ -13,10 +13,10 @@ $detail_jaminan = array(
     ['title' => 'Jenis Jaminan', 'value' => $jaminan['tipe'] . ' (' . $jaminan['tipe2'] . ')', 'nowrap' => array(true, true)],
     ['title' => 'Nomor Jaminan', 'value' => $jaminan['nomor'], 'nowrap' => array(true, true)],
     ['title' => 'Nilai Jaminan', 'value' => $jaminan['currency'] . ' ' . self_number_format($jaminan['nilai'], 2), 'nowrap' => array(true, true)],
-    ['title' => 'Principal', 'value' => $jaminan['principal'], 'nowrap' => array(false, true)],
+    ['title' => 'Principal', 'value' => $jaminan['principal'], 'nowrap' => array(false, false)],
     ['title' => 'Nomor Kontrak', 'value' => nl2br($jaminan['kontrak']), 'nowrap' => array(true, false)],
     ['title' => 'Pekerjaan', 'value' => nl2br($jaminan['pekerjaan']), 'nowrap' => array(false, false)],
-    ['title' => 'Obligee', 'value' => $jaminan['obligee'], 'nowrap' => array(false, true)],
+    ['title' => 'Obligee', 'value' => $jaminan['obligee'], 'nowrap' => array(false, false)],
     ['title' => 'Jaminan Berlaku', 'value' => $jaminan['day'] . ' Hari', 'nowrap' => array(true, true)],
     ['title' => 'Berlaku Mulai Tanggal', 'value' => format_date($jaminan['date']), 'nowrap' => array(true, true)],
     ['title' => 'Berlaku Sampai Tanggal', 'value' => set_date_to($jaminan['date'], $jaminan['date_to'], $jaminan['day']), 'nowrap' => array(true, true)]

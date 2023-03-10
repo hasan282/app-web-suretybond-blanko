@@ -50,7 +50,9 @@ $total_blanko = intval($result['number_to']) - intval($result['number_from']) + 
         <div class="col-lg-6">
             <div class="h-100 d-flex align-items-center">
                 <div class="w-100 text-center">
-                    <button class="btn btn-primary">Cetak Tanda Terima</button>
+                    <a href="<?= base_url('export/sent/' . $parameter); ?>">
+                        <button class="btn btn-primary">Cetak Tanda Terima</button>
+                    </a>
                 </div>
             </div>
         </div>

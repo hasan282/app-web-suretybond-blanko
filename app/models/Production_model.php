@@ -27,6 +27,15 @@ class Production_model extends Data_model
         return $this;
     }
 
+    public function filter($filter = [])
+    {
+        $filters = array(
+            'asuransi' => '',
+            'office' => '',
+            'pemakaian' => ''
+        );
+    }
+
     public function order()
     {
         $this->query .= ' ORDER BY asuransi.id ASC, blanko.nomor ASC';
