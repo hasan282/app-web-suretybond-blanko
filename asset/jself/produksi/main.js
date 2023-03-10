@@ -7,4 +7,10 @@ $(function () {
         submit: '#submitreport'
     });
 
+    $('#clearall').click(function () {
+        $('#asuransi').val('');
+        $('#office').val('');
+    });
+
 });
+

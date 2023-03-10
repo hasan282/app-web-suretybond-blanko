@@ -1,5 +1,12 @@
+<?php $month_list = 'Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember';
+$months = explode(',', $month_list);
+$datenow = date('Y-m-d');
+$dateshow = format_date($datenow, 'MM3 YY2');
+$datesplit = explode('-', $datenow);
+$yearnow = intval(date('Y')) + 1;
+$yearfrom = 2015; ?>
 <form action="<?= base_url(uri_string()) ?>" method="POST">
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-header">
             <h3 class="card-title">Blanko Terpakai <span class="text-bold text-olive"><?= $blankodata['page']; ?></span> Data</h3>
         </div>
@@ -40,18 +47,28 @@
             </table>
         </div>
     </div>
-    <?php $datenow = date('Y-m-d');
-    $dateshow = format_date($datenow, 'MM3 YY2'); ?>
     <div class="mw-400 mx-auto">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body p-2">
                 <div class="text-center">
                     <input type="hidden" id="month" name="month" value="<?= format_date($datenow, 'YY2-MM1'); ?>">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <button type="button" id="prevmonth" class="btn btn-default"><i class="fas fa-chevron-left"></i></button>
                         </div>
-                        <input type="text" id="showmonth" class="form-control text-center" value="<?= $dateshow; ?>" readonly>
+                        <select id="select_month" class="form-control">
+                            <?php foreach ($months as $num => $mnt) : ?>
+                                <option <?= (intval($datesplit[1]) == $num + 1) ? 'selected ' : ''; ?>value="<?= str_pad(strval($num + 1), 2, '0', STR_PAD_LEFT); ?>">
+                                    <?= $mnt; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <select id="select_year" class="form-control">
+                            <?php for ($yr = $yearnow; $yr >= $yearfrom; $yr--) : ?>
+                                <option <?= (intval($datesplit[0]) == $yr) ? 'selected ' : ''; ?>value="<?= $yr; ?>"><?= $yr; ?></option>
+                            <?php endfor; ?>
+                        </select>
+
                         <div class="input-group-append">
                             <button type="button" id="nextmonth" class="btn btn-default"><i class="fas fa-chevron-right"></i></button>
                         </div>
@@ -72,13 +89,21 @@
         $('#nextmonth').click(function() {
             change_month(1)
         });
+        $('#select_month').change(function() {
+            change_month(0, $(this).val());
+        });
+        $('#select_year').change(function() {
+            change_month(0, null, $(this).val());
+        });
     });
 
-    function change_month(change) {
-        const mn = ('Januari,Februari,Maret,April,Mei,Juni,Juli,Agustus,September,Oktober,November,Desember').split(',');
+    function change_month(change, setmonth = null, setyear = null) {
+        const mn = ('<?= implode(',', $months); ?>').split(',');
         const dt = ($('#month').val()).split('-');
         let year = parseInt(dt[0]);
+        if (setyear != null) year = parseInt(setyear);
         let month = parseInt(dt[1]);
+        if (setmonth != null) month = parseInt(setmonth);
         month += change;
         if (month > 12) {
             month -= 12;
@@ -91,6 +116,10 @@
         $('#showmonth').val(mn[month - 1] + ' ' + year);
         $('#btnmonth').html(mn[month - 1] + ' ' + year);
         if (month < 10) month = '0' + month;
+        if (setmonth == null && setyear == null) {
+            $('#select_month').val(month);
+            $('#select_year').val(year);
+        }
         $('#month').val(year + '-' + month);
     }
 </script>

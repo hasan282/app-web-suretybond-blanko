@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Production extends SELF_Controller
 {
-    private $limit, $page;
+    private $limit, $page, $filter;
 
     public function __construct()
     {
@@ -12,8 +12,10 @@ class Production extends SELF_Controller
         $this->load->model('Production_model', 'production');
         $page_limit = $this->session->flashdata('page_limit');
         $page_number = $this->session->flashdata('page_number');
-        $this->limit = ($page_limit == null) ? 10 : $page_limit;
-        $this->page = ($page_number == null) ? 1 : $page_number;
+        $page_filter = $this->session->flashdata('page_filter');
+        $this->limit = $page_limit ?: 10;
+        $this->page = $page_number ?: 1;
+        $this->filter = $page_filter ?: array();
     }
 
     public function index()
@@ -36,10 +38,17 @@ class Production extends SELF_Controller
         $blankos = $this->production->select()->where(null)->order();
         $data['title'] = 'Produksi';
         $data['plugin'] = 'basic|fontawesome|scrollbar|icheck';
-        $data['pagination'] = array('limit' => $this->limit, 'page' => $this->page, 'offset' => ($this->page - 1) * $this->limit);
+        $data['pagination'] = array(
+            'limit' => $this->limit,
+            'page' => $this->page,
+            'offset' => ($this->page - 1) * $this->limit
+        );
         $data['blankodata'] = array(
             'page' => $blankos->count(),
-            'data' => $blankos->limit($data['pagination']['limit'], $data['pagination']['offset'])->data_list()
+            'data' => $blankos->limit(
+                $data['pagination']['limit'],
+                $data['pagination']['offset']
+            )->data_list()
         );
         $data['jscript'] = 'functions/check|produksi/main';
         $this->layout->variable($data);
@@ -111,7 +120,9 @@ class Production extends SELF_Controller
         $month = array();
         $report = array();
         $select = null;
-        $monthdata = $this->db->query('SELECT laprod FROM blanko WHERE laprod IS NOT NULL GROUP BY laprod ORDER BY laprod DESC')->result_array();
+        $monthdata = $this->db->query(
+            'SELECT laprod FROM blanko WHERE laprod IS NOT NULL GROUP BY laprod ORDER BY laprod DESC'
+        )->result_array();
         if (!empty($monthdata)) foreach ($monthdata as $md) array_push($month, $md['laprod']);
         if (!empty($month)) {
             $select = (in_array($param, $month)) ? $param : $month[0];
@@ -120,10 +131,12 @@ class Production extends SELF_Controller
         return array('list' => $month, 'report' => $report, 'select' => $select);
     }
 
-    public function setlist($limit, $number)
+    public function setlist($limit = null, $number = null)
     {
-        $this->session->set_flashdata('page_limit', $limit);
-        $this->session->set_flashdata('page_number', $number);
+        if ($limit != null)
+            $this->session->set_flashdata('page_limit', $limit);
+        if ($number != null)
+            $this->session->set_flashdata('page_number', $number);
         redirect($this->input->get('log'));
     }
 

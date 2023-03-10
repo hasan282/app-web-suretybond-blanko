@@ -36,5 +36,10 @@
         $('[name="dataview"]').change(function() {
             setup_list_page($(this).val(), 1);
         });
+        $('#filterbutton').click(function() {
+            const asuransi = $('#asuransi').val();
+            const office = $('#office').val();
+            console.log(asuransi + '---' + office);
+        });
     });
 </script>

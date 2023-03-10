@@ -38,16 +38,14 @@ $data_office = $this->db->query('SELECT id, nama FROM office ORDER BY id_tipe, n
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <div class="form-group">
-                        <label for="laprod">Laporan Produksi</label>
-                        <select name="laprod" id="laprod" class="form-control filterselect" disabled>
-                            <option value="">---</option>
-                        </select>
+                        <label for="laprod">Laporan Pemakaian</label>
+                        <select name="laprod" id="laprod" class="form-control filterselect" disabled></select>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card-footer text-center">
-            <button type="button" id="filterbutton" class="btn btn-primary text-bold" disabled><i class="fas fa-search mr-2"></i>Cari Data Blanko</button>
+            <button type="button" id="filterbutton" class="btn btn-primary text-bold"><i class="fas fa-search mr-2"></i>Cari Data Blanko</button>
             <button type="button" id="clearall" class="btn btn-default ml-1 show-tooltip" title="Clear Filter"><i class="fas fa-eraser"></i></button>
         </div>
     </div>

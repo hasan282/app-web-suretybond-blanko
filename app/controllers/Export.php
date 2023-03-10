@@ -94,8 +94,5 @@ class Export extends CI_Controller
         }
         $data['datasent'] = $numbers;
         $this->load->view('export/index', $data);
-
-
-        // var_dump($numbers);
     }
 }
