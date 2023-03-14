@@ -25,6 +25,7 @@ $yearfrom = 2015; ?>
                         <th>Nomor Jaminan</th>
                         <th>Principal</th>
                         <th class="text-center border-left">Pemakai</th>
+                        <th class="text-center">Tagihan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,6 +42,7 @@ $yearfrom = 2015; ?>
                             <td class="border-right"><?= ($bd['jaminan'] == null) ? '-' : $bd['jaminan']; ?></td>
                             <td><?= ($bd['principal'] == null) ? '-' : $bd['principal']; ?></td>
                             <td class="text-center border-left text-bold"><?= $bd['office_nick']; ?></td>
+                            <td class="text-center"><?= $bd['pemakaian'] == null ? '-' : format_date($bd['pemakaian'] . '-01', 'MM2 YY2'); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

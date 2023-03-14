@@ -23,6 +23,7 @@ class Data_model extends SELF_Model
             'office' => 'office.nama AS office',
             'office_nick' => 'office.nickname AS office_nick',
             'produksi' => 'blanko.laprod AS produksi',
+            'pemakaian' => 'pemakaian.bulan AS pemakaian',
             'crash' => 'blanko_crash.enkripsi AS crash',
             'used' => 'blanko_used.enkripsi AS used',
             'principal' => 'principal.nama AS principal',
@@ -31,7 +32,7 @@ class Data_model extends SELF_Model
             'nilai' => 'jaminan.nilai AS nilai'
         );
         $query = 'SELECT ' . $this->_fields($fields, $select) . ' ';
-        $query .= 'FROM (((((((((blanko INNER JOIN asuransi ON blanko.id_asuransi = asuransi.id) ';
+        $query .= 'FROM ((((((((((blanko INNER JOIN asuransi ON blanko.id_asuransi = asuransi.id) ';
         $query .= 'INNER JOIN office ON blanko.id_office = office.id) ';
         $query .= 'INNER JOIN blanko_status ON blanko.id_status = blanko_status.id) ';
         $query .= 'LEFT OUTER JOIN blanko_used ON blanko.id = blanko_used.id_blanko) ';
@@ -40,7 +41,8 @@ class Data_model extends SELF_Model
         $query .= 'LEFT OUTER JOIN jaminan_tipe ON jaminan.id_tipe = jaminan_tipe.id) ';
         $query .= 'LEFT OUTER JOIN principal ON jaminan.id_principal = principal.id) ';
         $query .= 'LEFT OUTER JOIN obligee ON jaminan.id_obligee = obligee.id) ';
-        $query .= 'LEFT OUTER JOIN currency ON jaminan.id_currency = currency.id';
+        $query .= 'LEFT OUTER JOIN currency ON jaminan.id_currency = currency.id)';
+        $query .= 'LEFT OUTER JOIN pemakaian ON pemakaian.id_blanko = blanko.id';
         $this->query = $query;
         return $this;
     }

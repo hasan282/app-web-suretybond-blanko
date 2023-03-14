@@ -11,7 +11,7 @@
                     <th class="text-center border-right">Status</th>
                     <th>Nomor Jaminan</th>
                     <th>Principal</th>
-                    <th class="text-center border-left">Produksi</th>
+                    <th class="text-center border-left"><?= $office->id_tipe == '1' ? 'Produksi' : 'Penggunaan'; ?></th>
                     <th class="text-center border-left"><i class="fas fa-cog"></i></th>
                 </tr>
             </thead>

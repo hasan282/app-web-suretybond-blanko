@@ -72,7 +72,8 @@ class Recap_model extends CI_Model
             'days' => 'apply_days AS days'
         );
         if (sizeof($selector) > 0) foreach (array_keys($fields) as $key) if (!in_array($key, $selector)) unset($fields[$key]);
-        $core_table = 'SELECT enkripsi AS id, blanko.id AS real_id, id_asuransi, id_office, prefix, nomor, laprod, id_status, blanko_sent.date AS tanggal, keterangan FROM blanko INNER JOIN blanko_sent ON blanko.id = blanko_sent.id_blanko AND blanko.id_office = blanko_sent.office_to';
+        // $core_table = 'SELECT enkripsi AS id, blanko.id AS real_id, id_asuransi, id_office, prefix, nomor, laprod, id_status, blanko_sent.date AS tanggal, keterangan FROM blanko INNER JOIN blanko_sent ON blanko.id = blanko_sent.id_blanko AND blanko.id_office = blanko_sent.office_to';
+        $core_table = 'SELECT enkripsi AS id, blanko.id AS real_id, id_asuransi, id_office, prefix, nomor, pemakaian.bulan AS laprod, id_status, blanko_sent.date AS tanggal, keterangan FROM blanko INNER JOIN blanko_sent ON blanko.id = blanko_sent.id_blanko AND blanko.id_office = blanko_sent.office_to LEFT OUTER JOIN pemakaian ON blanko.id = pemakaian.id_blanko';
         if ($head_office) $core_table = 'SELECT enkripsi AS id, id AS real_id, id_asuransi, id_office, prefix, nomor, laprod, id_status, date_in AS tanggal, keterangan FROM blanko';
         $queries = 'SELECT ' . implode(', ', array_values($fields)) . ' FROM ((((((' . $core_table . ') AS blankos LEFT JOIN blanko_used ON blankos.real_id = blanko_used.id_blanko) ';
         $queries .= 'LEFT JOIN jaminan ON blanko_used.id_jaminan = jaminan.id) LEFT JOIN jaminan_tipe ON jaminan.id_tipe = jaminan_tipe.id) ';

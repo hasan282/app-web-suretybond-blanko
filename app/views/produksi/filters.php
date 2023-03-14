@@ -1,6 +1,7 @@
 <?php
 $data_asuransi = $this->db->query('SELECT enkripsi, nama FROM asuransi ORDER BY nama ASC')->result_array();
 $data_office = $this->db->query('SELECT id, nama FROM office ORDER BY id_tipe, nama ASC')->result_array();
+$data_bulan = $this->db->query('SELECT bulan FROM pemakaian GROUP BY bulan')->result_array();
 ?>
 <div class="mx-auto mw-900">
     <div class="card collapsed-card">
@@ -38,9 +39,12 @@ $data_office = $this->db->query('SELECT id, nama FROM office ORDER BY id_tipe, n
                 </div>
                 <div class="col-md-4 col-sm-6">
                     <div class="form-group">
-                        <label for="laprod">Laporan Pemakaian</label>
-                        <select name="laprod" id="laprod" class="form-control filterselect" disabled>
+                        <label for="laprod">Laporan Tagihan <small>(Bulan)</small></label>
+                        <select name="laprod" id="laprod" class="form-control filterselect">
                             <option value="" selected>---</option>
+                            <?php foreach ($data_bulan as $db) : ?>
+                                <option value="<?= $db['bulan']; ?>"><?= format_date($db['bulan'] . '-01', 'MM3 YY2'); ?></option>
+                            <?php endforeach; ?>
                         </select>
                     </div>
                 </div>

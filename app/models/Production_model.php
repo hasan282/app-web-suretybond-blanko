@@ -11,7 +11,7 @@ class Production_model extends Data_model
 
     public function select()
     {
-        $fields = array('enkripsi', 'prefix', 'nomor', 'status', 'color', 'jaminan', 'principal', 'office_nick');
+        $fields = array('enkripsi', 'prefix', 'nomor', 'status', 'color', 'jaminan', 'principal', 'pemakaian', 'office_nick');
         $this->blanko($fields);
         $this->query .= ' WHERE blanko_status.id IN (2, 3, 4)';
         return $this;
@@ -33,7 +33,7 @@ class Production_model extends Data_model
         $filters = array(
             'asuransi' => 'asuransi.enkripsi = ?',
             'office' => 'office.id = ?',
-            'pemakaian' => ''
+            'pemakaian' => 'pemakaian.bulan = ?'
         );
         foreach (array_keys($filters) as $key) if (!in_array($key, array_keys($filter))) unset($filters[$key]);
         if (!empty($filters)) {
