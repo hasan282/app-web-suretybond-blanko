@@ -27,19 +27,19 @@
 <body>
     <div id="container">
         <p class="mt-3 text-center">
-            <button class="btn btn-outline-primary" onclick="generatePdf()">Buat PDF</button>
+            <button class="btn btn-primary" onclick="generatePdf()">
+                <strong>Buat PDF</strong>
+            </button>
         </p>
         <div class="container w-25">
             <div class="form-group">
-                <label for="exampleInputEmail1">Input Note Title:</label>
-                <input type="text" class="form-control" id="input_note_title" aria-describedby="emailHelp" placeholder="ex : UP : Bpk. siapa">
+                <label for="input_note_title">Title Note</label>
+                <input type="text" class="form-control pagenotes" id="input_note_title" placeholder="Note" data-target="#target1">
             </div>
-            <button id="submit1" class="btn btn-primary mb-3">Submit</button>
             <div class="form-group">
-                <label for="exampleInputPassword1">Input Note Footer:</label>
-                <input type="text" class="form-control" id="input_note_footer" placeholder="ex : Dikirim Oleh ini">
+                <label for="input_note_footer">Footer Note</label>
+                <input type="text" class="form-control pagenotes" id="input_note_footer" placeholder="Note" data-target="#target2">
             </div>
-            <button id="submit2" class="btn btn-primary mb-3">Submit</button>
         </div>
         <div id="outer">
             <div id="doc-target">
@@ -61,7 +61,7 @@
                         <strong><?= $asuransi->nama; ?></strong>
                     </h5>
                     <h5 style="font-size: 10px;">
-                        <strong id="target1">UP : Bpk. Amiruddin</strong>
+                        <strong id="target1"></strong>
                     </h5>
                 </div>
                 <div class="row justify-content-center align-content-center">
@@ -132,12 +132,9 @@
         function generatePdf() {
             let jsPdf = new jsPDF('p', 'pt', 'letter');
             var htmlElement = document.getElementById('doc-target');
-            // you need to load html2canvas (and dompurify if you pass a string to html)
             const opt = {
                 callback: function(jsPdf) {
                     jsPdf.output('dataurlnewwindow')
-                    // to open the generated PDF in browser window
-                    // window.open(jsPdf.output('bloburl'));
                 },
                 margin: [72, 72, 72, 72],
                 autoPaging: 'text',
@@ -148,34 +145,18 @@
                     logging: false,
                     scale: .8
                 },
-                // x: 10,
-                // y: 10,
-                width: 216, //target width in the PDF document
-                // windowWidth: 675 //window width in CSS pixels
+                width: 216
             };
-
             jsPdf.html(htmlElement, opt);
         }
-
-        $(document).ready(function() {
-
-            $("#submit1").click(function() {
-                var nilai = $("#input_note_title").val();
-                $("#target1").html(nilai);
-            })
-
-        });
-
-        $(document).ready(function() {
-
-            $("#submit2").click(function() {
-                var nilai = $("#input_note_footer").val();
-                $("#target2").html(nilai);
-            })
-
+        $(function() {
+            $('.pagenotes').on('keyup', function() {
+                const TARGET = $(this).data('target');
+                const VALS = $(this).val();
+                $(TARGET).html(VALS);
+            });
         });
     </script>
-
 </body>
 
 </html>
