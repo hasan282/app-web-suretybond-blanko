@@ -84,6 +84,31 @@ class Export extends CI_Controller
     public function sent($param = null)
     {
         $numbers = array();
+        $asuransi = array();
+        $this->load->database();
+        $datasent = (array) $this->db->get_where('record_sent', ['enkripsi' => $param])->row();
+        if (!empty($datasent)) {
+            $this->load->model('List_model', 'lists');
+            $numbers = $this->lists->select(['fullnumber' && 'id_asuransi'])->where([
+                'asuransi' => self_md5($datasent['id_asuransi'])
+            ])->between([$datasent['number_from'], $datasent['number_to']])->data_list();
+        }
+        if (!empty($datasent)) {
+            $this->load->model('List_model', 'lists');
+            $asuransi = $this->db->get_where('asuransi', ['id' => $datasent['id_asuransi']])->row();
+        }
+
+        $data['datasent'] = $numbers;
+        $data['asuransi'] = $asuransi;
+
+        // var_dump($asuransi);
+
+        $this->load->view('export/index', $data);
+    }
+
+    public function pemeliharaan($param = null)
+    {
+        $numbers = array();
         $this->load->database();
         $datasent = (array) $this->db->get_where('record_sent', ['enkripsi' => $param])->row();
         if (!empty($datasent)) {
@@ -93,6 +118,6 @@ class Export extends CI_Controller
             ])->between([$datasent['number_from'], $datasent['number_to']])->data_list();
         }
         $data['datasent'] = $numbers;
-        $this->load->view('export/index', $data);
+        $this->load->view('export/warantybond_pemeliharaan');
     }
 }

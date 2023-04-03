@@ -58,7 +58,7 @@
                         <strong>TANDA TERIMA BLANKO</strong>
                     </h5>
                     <h5 class="text-uppercase" style="font-size: 10px;">
-                        <strong>PT. ASURANSI MAXIMUS</strong>
+                        <strong><?= $asuransi->nama; ?></strong>
                     </h5>
                     <h5 style="font-size: 10px;">
                         <strong id="target1">UP : Bpk. Amiruddin</strong>
@@ -68,6 +68,7 @@
                     <?php
                     $max_number = 20;
                     $count_data = sizeof($datasent);
+                    if ($count_data < $max_number) $max_number = $count_data;
                     $number_first = 0;
                     $number_last = $max_number - 1;
                     $cols = ceil($count_data / $max_number);
