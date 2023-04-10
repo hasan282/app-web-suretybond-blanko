@@ -105,7 +105,7 @@ class Api extends CI_Controller
                     break;
             }
         } else {
-            bad_request();
+            bad_request(401);
         }
     }
 
