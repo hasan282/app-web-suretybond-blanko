@@ -23,17 +23,20 @@ class Data extends SELF_Controller
         $this->_key_check();
         $username = $this->input->get('user');
         $password = self_md5($this->input->get('pass'));
-        $userdata = $this->db->get_where('user', array(
-            'username' => $username, 'password' => $password, 'is_active' => 1
-        ))->row();
+        $this->load->model('User_model', 'users');
+        $userdata = $this->users->api_user($username, $password);
         if ($userdata === null || !method_is('GET')) {
             bad_request();
         } else {
             $data = array(
-                'id' => $userdata->enkripsi,
-                'user' => $userdata->username,
-                'nama' => $userdata->nama,
-                'foto' => base_url('asset/img/user/' . $userdata->photo)
+                'id' => $userdata->id,
+                'user' => $userdata->user,
+                'nama' => $userdata->name,
+                'foto' => base_url('asset/img/user/' . $userdata->foto),
+                'office_id' => $userdata->office_id,
+                'office' => $userdata->office,
+                'role_id' => $userdata->role_id,
+                'role' => $userdata->role
             );
             print_data(array($data));
         }

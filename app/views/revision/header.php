@@ -9,5 +9,5 @@
     </div>
 </div>
 <script>
-    const src_to = '<?= str_replace('/b', '/in', uri_string()); ?>?var=$id';
+    const src_to = '<?= str_replace('revision/b', 'revision/in', uri_string()); ?>?var=$id';
 </script>

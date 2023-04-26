@@ -30,4 +30,13 @@ class User_model extends CI_Model
         $query .= 'ORDER BY user.is_active DESC, user.id_access, office.nama ASC';
         return $this->db->query($query)->result_array();
     }
+
+    public function api_user(?string $username, ?string $password)
+    {
+        $binds = array($username, $password);
+        $select = 'user.enkripsi AS id, user.username AS user, user.password AS pass, user.nama AS name, user.photo AS foto, office.id AS office_id, office.nama AS office, access.id AS role_id, access.access AS role';
+        $query = 'SELECT ' . $select . ' FROM (user INNER JOIN office ON user.id_office = office.id) INNER JOIN access ON user.id_access = access.id';
+        $where = ' WHERE user.is_active = 1 AND user.username = ? AND user.password = ?';
+        return $this->db->query($query . $where, $binds)->row();
+    }
 }
