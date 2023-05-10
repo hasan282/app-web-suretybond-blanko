@@ -66,7 +66,8 @@
                 </div>
                 <div class="row justify-content-center align-content-center">
                     <?php
-                    $max_number = 20;
+                    $max_number = 25;
+                    if($this->input->get('rows')!==null) $max_number= intval($this->input->get('rows'));
                     $count_data = sizeof($datasent);
                     if ($count_data < $max_number) $max_number = $count_data;
                     $number_first = 0;
@@ -119,6 +120,12 @@
                 </div>
             </div>
         </div>
+        <div class="container w-25 pt-3">
+            <div class="form-group">
+                <label for="input_note_title">Title Note</label>
+                <input type="text" class="form-control pagenotes" id="input_note_title" placeholder="Note" data-target="#target1">
+            </div>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -156,6 +163,11 @@
                 $(TARGET).html(VALS);
             });
         });
+
+        function getCurrentURL () {
+            return window.location.href
+        }
+
     </script>
 </body>
 
