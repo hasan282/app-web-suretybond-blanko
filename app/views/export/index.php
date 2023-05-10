@@ -75,7 +75,7 @@
                     $cols = ceil($count_data / $max_number);
                     for ($i = 0; $i < $cols; $i++) : ?>
                         <div class="col-lg-3">
-                            <table class="table table-bordered table-sm" style="font-size: 10px;">
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
                                 <thead>
                                     <tr style="background-color: yellow;">
                                         <th scope="col">No</th>
