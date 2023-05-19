@@ -67,7 +67,7 @@
                 <div class="row justify-content-center align-content-center">
                     <?php
                     $max_number = 25;
-                    if($this->input->get('rows')!==null) $max_number= intval($this->input->get('rows'));
+                    if ($this->input->get('rows') !== null) $max_number = intval($this->input->get('rows'));
                     $count_data = sizeof($datasent);
                     if ($count_data < $max_number) $max_number = $count_data;
                     $number_first = 0;
@@ -118,6 +118,11 @@
                         <h5 style="font-size: 10px;"><strong>Note :</strong> <strong id="target2"></strong> </h5>
                     </div>
                 </div>
+                <p class="mt-3 text-center">
+                    <button class="btn btn-primary" onclick="getRow()">
+                        <strong>Buat PDF</strong>
+                    </button>
+                </p>
             </div>
         </div>
         <div class="container w-25 pt-3">
@@ -134,6 +139,19 @@
         // https://html2canvas.hertzen.com/configuration
         // https://rawgit.com/MrRio/jsPDF/master/docs/module-html.html#~html
         // https://artskydj.github.io/jsPDF/docs/jsPDF.html
+
+
+
+        function getRow() {
+            function getCurrentURL() {
+                return window.location.href
+            }
+            let inputUrl = new URL(getCurrentURL());
+            // console.log(inputUrl)
+            inputUrl.searchParams.append('rows', 30);
+
+        }
+
         window.jsPDF = window.jspdf.jsPDF;
 
         function generatePdf() {
@@ -163,11 +181,6 @@
                 $(TARGET).html(VALS);
             });
         });
-
-        function getCurrentURL () {
-            return window.location.href
-        }
-
     </script>
 </body>
 
