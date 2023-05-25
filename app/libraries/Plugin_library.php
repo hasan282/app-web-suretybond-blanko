@@ -47,7 +47,7 @@ class Plugin_library
         );
     }
 
-    public function get($plugin = '', $position=null)
+    public function get($plugin = '', $position = null)
     {
         $this->css = '';
         $this->js = '';

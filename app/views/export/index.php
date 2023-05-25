@@ -25,6 +25,10 @@
 </head>
 
 <body>
+    <?php
+    $max_number = 25;
+    if ($this->input->get('rows') !== null) $max_number = intval($this->input->get('rows'));
+    ?>
     <div id="container">
         <p class="mt-3 text-center">
             <button class="btn btn-primary" onclick="generatePdf()">
@@ -39,6 +43,11 @@
             <div class="form-group">
                 <label for="input_note_footer">Footer Note</label>
                 <input type="text" class="form-control pagenotes" id="input_note_footer" placeholder="Note" data-target="#target2">
+            </div>
+            <div class="form-group">
+                <label for="table_rows">Rows</label>
+                <input type="text" class="form-control" id="table_rows" placeholder="Rows" value="<?= $max_number; ?>">
+                <button type="button" class="btn btn-secondary" id="set_rows">Sesuaikan</button>
             </div>
         </div>
         <div id="outer">
@@ -66,8 +75,6 @@
                 </div>
                 <div class="row justify-content-center align-content-center">
                     <?php
-                    $max_number = 25;
-                    if ($this->input->get('rows') !== null) $max_number = intval($this->input->get('rows'));
                     $count_data = sizeof($datasent);
                     if ($count_data < $max_number) $max_number = $count_data;
                     $number_first = 0;
@@ -118,19 +125,19 @@
                         <h5 style="font-size: 10px;"><strong>Note :</strong> <strong id="target2"></strong> </h5>
                     </div>
                 </div>
-                <p class="mt-3 text-center">
+                <!-- <p class="mt-3 text-center">
                     <button class="btn btn-primary" onclick="getRow()">
                         <strong>Buat PDF</strong>
                     </button>
-                </p>
+                </p> -->
             </div>
         </div>
-        <div class="container w-25 pt-3">
+        <!-- <div class="container w-25 pt-3">
             <div class="form-group">
                 <label for="input_note_title">Title Note</label>
                 <input type="text" class="form-control pagenotes" id="input_note_title" placeholder="Note" data-target="#target1">
             </div>
-        </div>
+        </div> -->
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -139,8 +146,6 @@
         // https://html2canvas.hertzen.com/configuration
         // https://rawgit.com/MrRio/jsPDF/master/docs/module-html.html#~html
         // https://artskydj.github.io/jsPDF/docs/jsPDF.html
-
-
 
         function getRow() {
             function getCurrentURL() {
@@ -179,6 +184,9 @@
                 const TARGET = $(this).data('target');
                 const VALS = $(this).val();
                 $(TARGET).html(VALS);
+            });
+            $('#set_rows').click(function() {
+                window.location.href = '<?= base_url(uri_string()); ?>?rows=' + $('#table_rows').val();
             });
         });
     </script>

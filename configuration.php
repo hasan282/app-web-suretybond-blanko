@@ -4,7 +4,7 @@ $my_config = array(
 
     'hosting' => false,
 
-    'url_local' => 'http://localhost:8080/kerjaan2/web-blanko/',
+    'url_local' => 'http://localhost/blanko/',
     'url_hosting' => 'https://surety.ptjis.com/',
 
     'db_host' => 'localhost',
