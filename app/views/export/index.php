@@ -66,7 +66,8 @@
                 </div>
                 <div class="row justify-content-center align-content-center">
                     <?php
-                    $max_number = 20;
+                    $max_number = 25;
+                    if ($this->input->get('rows') !== null) $max_number = intval($this->input->get('rows'));
                     $count_data = sizeof($datasent);
                     if ($count_data < $max_number) $max_number = $count_data;
                     $number_first = 0;
@@ -74,7 +75,7 @@
                     $cols = ceil($count_data / $max_number);
                     for ($i = 0; $i < $cols; $i++) : ?>
                         <div class="col-lg-3">
-                            <table class="table table-bordered table-sm" style="font-size: 10px;">
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
                                 <thead>
                                     <tr style="background-color: yellow;">
                                         <th scope="col">No</th>
@@ -117,6 +118,17 @@
                         <h5 style="font-size: 10px;"><strong>Note :</strong> <strong id="target2"></strong> </h5>
                     </div>
                 </div>
+                <p class="mt-3 text-center">
+                    <button class="btn btn-primary" onclick="getRow()">
+                        <strong>Buat PDF</strong>
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div class="container w-25 pt-3">
+            <div class="form-group">
+                <label for="input_note_title">Title Note</label>
+                <input type="text" class="form-control pagenotes" id="input_note_title" placeholder="Note" data-target="#target1">
             </div>
         </div>
     </div>
@@ -127,6 +139,19 @@
         // https://html2canvas.hertzen.com/configuration
         // https://rawgit.com/MrRio/jsPDF/master/docs/module-html.html#~html
         // https://artskydj.github.io/jsPDF/docs/jsPDF.html
+
+
+
+        function getRow() {
+            function getCurrentURL() {
+                return window.location.href
+            }
+            let inputUrl = new URL(getCurrentURL());
+            // console.log(inputUrl)
+            inputUrl.searchParams.append('rows', 30);
+
+        }
+
         window.jsPDF = window.jspdf.jsPDF;
 
         function generatePdf() {
