@@ -18,7 +18,7 @@ class Recap_model extends CI_Model
             'tanggal' => 'date_sent AS tanggal',
             'mins' => 'MIN(nomor) AS mins',
             'maxs' => 'MAX(nomor) AS maxs',
-            'available' => 'SUM(CASE WHEN id_status = 1 THEN 1 ELSE 0 END) AS available',
+            'available' => 'SUM(CASE WHEN id_status = 1 OR id_status = 5 THEN 1 ELSE 0 END) AS available',
             'used' => 'SUM(CASE WHEN id_status = 2 THEN 1 ELSE 0 END) AS used',
             'crash' => 'SUM(CASE WHEN id_status = 3 OR id_status = 4 THEN 1 ELSE 0 END) AS crash'
         );
@@ -36,7 +36,7 @@ class Recap_model extends CI_Model
         $fields = array(
             'id' => 'id_office AS id',
             'office' => 'office.nama AS office',
-            'available' => 'SUM(CASE WHEN id_status = 1 THEN 1 ELSE 0 END) AS available',
+            'available' => 'SUM(CASE WHEN id_status = 1 OR id_status = 5 THEN 1 ELSE 0 END) AS available',
             'used' => 'SUM(CASE WHEN id_status = 2 THEN 1 ELSE 0 END) AS used',
             'crash' => 'SUM(CASE WHEN id_status = 3 OR id_status = 4 THEN 1 ELSE 0 END) AS crash'
         );
@@ -100,7 +100,7 @@ class Recap_model extends CI_Model
         $fields = array(
             'id' => 'asuransi.enkripsi AS id',
             'asuransi' => 'asuransi.nama AS asuransi',
-            'available' => 'SUM(CASE WHEN id_status = 1 THEN 1 ELSE 0 END) AS available',
+            'available' => 'SUM(CASE WHEN id_status = 1 OR id_status = 5 THEN 1 ELSE 0 END) AS available',
             'used' => 'SUM(CASE WHEN id_status = 2 THEN 1 ELSE 0 END) AS used',
             'crash' => 'SUM(CASE WHEN id_status = 3 OR id_status = 4 THEN 1 ELSE 0 END) AS crash'
         );

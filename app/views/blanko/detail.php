@@ -8,7 +8,7 @@ $rev_from = $this->db->query('SELECT enkripsi, prefix, nomor FROM revisi INNER J
             <h6 class="mb-0">
                 Status : <span class="text-bold text-<?= $blanko['color']; ?>"><?= $blanko['status']; ?></span>
                 <?php isset($true_office) ?: $true_office = false;
-                if ($true_office) : ?>
+                if ($true_office && $blanko['id_status'] != '5') : ?>
                     <a href="<?= base_url('edit/status/' . self_md5($blanko['id'])); ?>" class="ml-1 link-muted show-tooltip" title="Ubah Status"><i class="fas fa-edit"></i></a>
                 <?php endif; ?>
             </h6>

@@ -80,7 +80,7 @@ class Blanko extends CI_Controller
     {
         $data['title'] = 'Detail Blanko';
         $data['plugin'] = 'basic|fontawesome|scrollbar';
-        $breads = array('1' => '', '2' => '/used', '3' => '/crash', '4' => '/crash');
+        $breads = array('1' => '', '2' => '/used', '3' => '/crash', '4' => '/crash', '5' => '');
         $data['bread'] = 'Blanko List,blanko' . $breads[$blanko_data['id_status']] . '|Detail';
         $data['blanko'] = $blanko_data;
         $data['true_office'] = ($blanko_data['id_office'] == $officedata->id);
@@ -96,7 +96,9 @@ class Blanko extends CI_Controller
                 $this->layout->content('blanko/detail_used');
             }
         } else {
-            if ($blanko_data['id_status'] != '1') $this->layout->content('info/add_jaminan');
+            if (!in_array($blanko_data['id_status'], ['1', '5'])) {
+                $this->layout->content('info/add_jaminan');
+            }
         }
         if ($blanko_data['id_crash'] != null)
             $this->layout->content('blanko/detail_crash');
