@@ -54,6 +54,7 @@ class Data extends SELF_Controller
                 $this->_post_marking();
                 break;
             case 'use':
+                $this->_post_use();
                 break;
             default:
                 bad_request();
@@ -109,6 +110,51 @@ class Data extends SELF_Controller
 
     private function _post_use()
     {
+        if (method_is('POST')) {
+            $this->load->helper('id');
+            $this->load->model('Blanko_new_model', 'blankos');
+            $blanko = $this->input->get('blanko');
+            $user = get_real_id('user', $this->input->post('user'));
+            $blankodata = $this->blankos->getdata(
+                array('id', 'status_id')
+            )->where(['id' => $blanko])->data();
+            if (!empty($blankodata) && $blankodata['status_id'] == '5') {
+                $this->load->model('Blanko_use_model', 'useblanko');
+                $datamodel = $this->useblanko->api_usedata($this->input->post());
+                $used['id'] = date('ymdHis') . mt_rand(1000, 9999);
+                $used['enkripsi'] = self_md5($used['id']);
+                $used['id_blanko'] = $blankodata['id'];
+                $used['id_jaminan'] = $datamodel['jaminan']['id'];
+                $used['id_user'] = $user;
+                $in_principal = true;
+                $in_obligee = true;
+                $this->db->trans_start();
+                $trans_used = $this->db->insert('blanko_used', $used);
+                $in_jaminan = $this->db->insert('jaminan', $datamodel['jaminan']);
+                if (!empty($datamodel['principal']))
+                    $in_principal = $this->db->insert('principal', $datamodel['principal']);
+                if (!empty($datamodel['obligee']))
+                    $in_obligee = $this->db->insert('obligee', $datamodel['obligee']);
+                $trans_jaminan = ($in_jaminan && $in_principal && $in_obligee);
+                $trans_blanko = $this->db->update(
+                    'blanko',
+                    ['id_status' => 2],
+                    ['id' => $blankodata['id']]
+                );
+                $this->db->trans_complete();
+                $result = $this->db->trans_status();
+                print_data([
+                    'all' => $result,
+                    'blanko' => $trans_blanko,
+                    'jaminan' => $trans_jaminan,
+                    'used' => $trans_used
+                ]);
+            } else {
+                bad_request();
+            }
+        } else {
+            bad_request();
+        }
     }
 
     private function _key_check()

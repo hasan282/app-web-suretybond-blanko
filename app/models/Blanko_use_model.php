@@ -149,4 +149,55 @@ class Blanko_use_model extends CI_Model
         unlink($resize_config['source_image']);
         return $data['raw_name'] . '_resize' . $data['file_ext'];
     }
+
+    public function api_usedata($post)
+    {
+        $officeid = $post['office'] ?? null;
+        $id = date('ymdHis') . mt_rand(1000, 9999);
+        $jaminan = array(
+            'id' => $id,
+            'enkripsi' => self_md5($id)
+        );
+        $principal = array();
+        $obligee = array();
+        $jaminan_keys = array(
+            'id_tipe', 'nomor', 'id_principal', 'id_obligee', 'id_currency', 'nilai',
+            'kontrak', 'pekerjaan', 'apply_date', 'end_date', 'apply_days'
+        );
+        foreach ($jaminan_keys as $jk) $jaminan[$jk] = $post[$jk] ?? null;
+        if ($jaminan['id_principal'] !== null) {
+            $principal_src = $this->db->get_where('principal', [
+                'id' => $jaminan['id_principal']
+            ])->row();
+            if ($principal_src === null) $principal = array(
+                'id' => $jaminan['id_principal'],
+                'nama' => $post['principal'] ?? null,
+                'id_office' => $officeid,
+                'visible' => 1
+            );
+        }
+        $obligee_name = $post['obligee'] ?? null;
+        if ($obligee_name !== null && $obligee_name != '') {
+            $obligee_src = $this->db->get_where('obligee', [
+                'nama' => $obligee_name,
+                'id_office' => $officeid
+            ])->row();
+            if ($obligee_src === null) {
+                $obligee = array(
+                    'id' => date('ymdHis') . mt_rand(1000, 9999),
+                    'nama' => $obligee_name,
+                    'id_office' => $officeid,
+                    'visible' => 1
+                );
+                $jaminan['id_obligee'] = $obligee['id'];
+            } else {
+                $jaminan['id_obligee'] = $obligee_src->id;
+            }
+        }
+        return array(
+            'jaminan' => $jaminan,
+            'principal' => $principal,
+            'obligee' => $obligee
+        );
+    }
 }
