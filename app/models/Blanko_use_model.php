@@ -177,22 +177,21 @@ class Blanko_use_model extends CI_Model
             );
         }
         $obligee_name = $post['obligee'] ?? null;
-        if ($obligee_name !== null && $obligee_name != '') {
-            $obligee_src = $this->db->get_where('obligee', [
+        if ($obligee_name === null || $obligee_name == '') $obligee_name = '-';
+        $obligee_src = $this->db->get_where('obligee', [
+            'nama' => $obligee_name,
+            'id_office' => $officeid
+        ])->row();
+        if ($obligee_src === null) {
+            $obligee = array(
+                'id' => date('ymdHis') . mt_rand(1000, 9999),
                 'nama' => $obligee_name,
-                'id_office' => $officeid
-            ])->row();
-            if ($obligee_src === null) {
-                $obligee = array(
-                    'id' => date('ymdHis') . mt_rand(1000, 9999),
-                    'nama' => $obligee_name,
-                    'id_office' => $officeid,
-                    'visible' => 1
-                );
-                $jaminan['id_obligee'] = $obligee['id'];
-            } else {
-                $jaminan['id_obligee'] = $obligee_src->id;
-            }
+                'id_office' => $officeid,
+                'visible' => 1
+            );
+            $jaminan['id_obligee'] = $obligee['id'];
+        } else {
+            $jaminan['id_obligee'] = $obligee_src->id;
         }
         return array(
             'jaminan' => $jaminan,

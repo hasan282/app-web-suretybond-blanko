@@ -56,6 +56,9 @@ class Data extends SELF_Controller
             case 'use':
                 $this->_post_use();
                 break;
+            case 'crash':
+                $this->_post_crash();
+                break;
             default:
                 bad_request();
                 break;
@@ -111,21 +114,13 @@ class Data extends SELF_Controller
     private function _post_use()
     {
         if (method_is('POST')) {
-            $this->load->helper('id');
-            $this->load->model('Blanko_new_model', 'blankos');
-            $blanko = $this->input->get('blanko');
-            $user = get_real_id('user', $this->input->post('user'));
-            $blankodata = $this->blankos->getdata(
-                array('id', 'status_id')
-            )->where(['id' => $blanko])->data();
-            if (!empty($blankodata) && $blankodata['status_id'] == '5') {
-                $this->load->model('Blanko_use_model', 'useblanko');
-                $datamodel = $this->useblanko->api_usedata($this->input->post());
-                $used['id'] = date('ymdHis') . mt_rand(1000, 9999);
-                $used['enkripsi'] = self_md5($used['id']);
-                $used['id_blanko'] = $blankodata['id'];
-                $used['id_jaminan'] = $datamodel['jaminan']['id'];
-                $used['id_user'] = $user;
+            $datablanko = $this->_datablanko();
+            if ($datablanko === null) {
+                bad_request();
+            } else {
+                $used = $datablanko['used'];
+                $datamodel = $datablanko['model'];
+                $blanko = $datablanko['blanko'];
                 $in_principal = true;
                 $in_obligee = true;
                 $this->db->trans_start();
@@ -139,7 +134,7 @@ class Data extends SELF_Controller
                 $trans_blanko = $this->db->update(
                     'blanko',
                     ['id_status' => 2],
-                    ['id' => $blankodata['id']]
+                    ['id' => $blanko['id']]
                 );
                 $this->db->trans_complete();
                 $result = $this->db->trans_status();
@@ -149,12 +144,70 @@ class Data extends SELF_Controller
                     'jaminan' => $trans_jaminan,
                     'used' => $trans_used
                 ]);
-            } else {
-                bad_request();
             }
         } else {
             bad_request();
         }
+    }
+
+    private function _post_crash()
+    {
+        if (method_is('POST')) {
+            $datablanko = $this->_datablanko();
+            if ($datablanko === null) {
+                bad_request();
+            } else {
+                $blanko = $datablanko['blanko'];
+                $model = $datablanko['model'];
+                $used = $datablanko['used'];
+                $this->db->trans_start();
+
+                $trans_blanko = $this->db->update(
+                    'blanko',
+                    array('id_status' => 3),
+                    array('id' => $blanko['id'])
+                );
+                $this->db->trans_complete();
+                $transtatus = $this->db->trans_status();
+                print_data(array(
+                    'all' => $transtatus,
+                    'blanko' => '',
+                    'jaminan' => '',
+                    'used' => '',
+                    'crash' => '',
+                    'data' => ''
+                ));
+            }
+        } else {
+            bad_request();
+        }
+    }
+
+    private function _datablanko()
+    {
+        $returns = null;
+        $this->load->helper('id');
+        $this->load->model('Blanko_new_model', 'blankos');
+        $blanko = $this->input->get('blanko');
+        $user = get_real_id('user', $this->input->post('user'));
+        $blankodata = $this->blankos->getdata(
+            array('id', 'nomor', 'status_id')
+        )->where(['id' => $blanko])->data();
+        if (!empty($blankodata) && $blankodata['status_id'] == '5') {
+            $this->load->model('Blanko_use_model', 'useblanko');
+            $datamodel = $this->useblanko->api_usedata($this->input->post());
+            $used['id'] = date('ymdHis') . mt_rand(1000, 9999);
+            $used['enkripsi'] = self_md5($used['id']);
+            $used['id_blanko'] = $blankodata['id'];
+            $used['id_jaminan'] = $datamodel['jaminan']['id'];
+            $used['id_user'] = $user;
+            $returns = array(
+                'used' => $used,
+                'blanko' => $blankodata,
+                'model' => $datamodel
+            );
+        }
+        return $returns;
     }
 
     private function _key_check()
