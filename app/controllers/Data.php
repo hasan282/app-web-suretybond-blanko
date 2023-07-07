@@ -154,28 +154,59 @@ class Data extends SELF_Controller
     {
         if (method_is('POST')) {
             $datablanko = $this->_datablanko();
-            if ($datablanko === null) {
+            $this->load->helper('user');
+            $officedata = get_user_office($this->input->post('user'));
+            if ($datablanko === null || $officedata === null) {
                 bad_request();
             } else {
                 $blanko = $datablanko['blanko'];
                 $model = $datablanko['model'];
                 $used = $datablanko['used'];
+                $crash = array(
+                    'id' => date('ymdHis') . mt_rand(1000, 9999),
+                    'id_blanko' => $blanko['id'],
+                    'id_user' => $used['id_user'],
+                    'keterangan' => 'Rusak pada saat Cetak'
+                );
+                $crash['enkripsi'] = self_md5($crash['id']);
+                $new_blanko = $this->blankos->refresh()->getdata(
+                    array('id', 'prefix', 'nomor')
+                )->where(array(
+                    'status' => 1,
+                    'office' => $officedata->id,
+                    'asuransi' => $blanko['asuransi_id']
+                ))->where(
+                    "blanko.nomor > '" . $blanko['nomor'] . "'"
+                )->limit(1)->data();
                 $this->db->trans_start();
-
+                $trans_used = $this->db->insert('blanko_used', $used);
+                $trans_crash = $this->db->insert('blanko_crash', $crash);
+                $in_jaminan = $this->db->insert('jaminan', $model['jaminan']);
+                $in_principal = true;
+                $in_obligee = true;
+                if (!empty($model['principal']))
+                    $in_principal = $this->db->insert('principal', $model['principal']);
+                if (!empty($model['obligee']))
+                    $in_obligee = $this->db->insert('obligee', $model['obligee']);
                 $trans_blanko = $this->db->update(
                     'blanko',
                     array('id_status' => 3),
                     array('id' => $blanko['id'])
                 );
+                $marking = $this->db->update(
+                    'blanko',
+                    array('id_status' => 5),
+                    array('id' => $new_blanko['id'])
+                );
                 $this->db->trans_complete();
                 $transtatus = $this->db->trans_status();
                 print_data(array(
                     'all' => $transtatus,
-                    'blanko' => '',
-                    'jaminan' => '',
-                    'used' => '',
-                    'crash' => '',
-                    'data' => ''
+                    'blanko' => ($trans_blanko && $marking),
+                    'jaminan' => ($in_jaminan && $in_principal && $in_obligee),
+                    'used' => $trans_used,
+                    'crash' => $trans_crash,
+                    'new' => $new_blanko
                 ));
             }
         } else {
@@ -191,7 +222,7 @@ class Data extends SELF_Controller
         $blanko = $this->input->get('blanko');
         $user = get_real_id('user', $this->input->post('user'));
         $blankodata = $this->blankos->getdata(
-            array('id', 'nomor', 'status_id')
+            array('id', 'nomor', 'status_id', 'asuransi_id')
         )->where(['id' => $blanko])->data();
         if (!empty($blankodata) && $blankodata['status_id'] == '5') {
             $this->load->model('Blanko_use_model', 'useblanko');

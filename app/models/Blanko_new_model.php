@@ -12,6 +12,14 @@ class Blanko_new_model extends SELF_Model
         $this->bindval = array();
     }
 
+    public function refresh()
+    {
+        $this->select = null;
+        $this->where = array();
+        $this->bindval = array();
+        return $this;
+    }
+
     public function getdata(array $select = [])
     {
         $fields = array(
