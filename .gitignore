@@ -1,3 +1,29 @@
-configuration.php
+# Blanko Use And Crash
+asset/img/blanko_crash/*
+!asset/img/blanko_crash/index.html
+asset/img/blanko_use/*
+!asset/img/blanko_use/index.html
 
+# User Profile Image
+asset/img/user/*
+!asset/img/user/user_default_female.jpg
+!asset/img/user/user_default_male.jpg
+
+# Session Folder
 system/sessions/*
+!system/sessions/index.html
+
+# Cache and Logs Folder
+app/cache/*
+!app/cache/index.html
+app/logs/*
+!app/logs/index.html
+
+# Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
+/tests/tests/
+/tests/results/
