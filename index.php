@@ -1,5 +1,11 @@
 <?php
 
+$is_local = isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] === 'localhost';
+if ($is_local) {
+	header('location: http://localhost:8074/suretybond-blanko/');
+	die;
+}
+
 /**
  * CodeIgniter
  *

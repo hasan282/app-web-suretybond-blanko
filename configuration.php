@@ -4,11 +4,11 @@ $my_config = array(
 
     'hosting' => false,
 
-    'url_local' => 'http://localhost/blanko/',
-    'url_hosting' => 'https://surety.ptjis.com/',
+    'url_local' => 'http://localhost:8074/suretybond-blanko/',
+    'url_hosting' => 'https://suretyblanko.ptjis.id/',
 
     'db_host' => 'localhost',
-    'db_name' => 'ptjis_blanko',
+    'db_name' => 'suretybond_blanko',
     'db_user' => 'root',
     'db_pass' => ''
 
