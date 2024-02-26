@@ -8,7 +8,7 @@ $yearfrom = 2015; ?>
 <form action="<?= base_url(uri_string()) ?>" method="POST">
     <div class="card mb-2">
         <div class="card-header">
-            <h3 class="card-title">Blanko Terpakai <span class="text-bold text-olive"><?= $blankodata['page']; ?></span> Data</h3>
+            <h3 class="card-title">Pilih Data Blanko Terpakai</h3>
         </div>
         <div class="card-body table-responsive p-0">
             <table class="table table-hover text-nowrap">

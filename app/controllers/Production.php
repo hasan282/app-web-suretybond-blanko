@@ -44,11 +44,13 @@ class Production extends SELF_Controller
             'offset' => ($this->page - 1) * $this->limit
         );
         $data['blankodata'] = array(
-            'page' => $blankos->count(),
+            'page' => 0,
+            // 'page' => $blankos->count(),
             'data' => $blankos->limit(
                 $data['pagination']['limit'],
                 $data['pagination']['offset']
             )->data_list()
+            // )->query_string()
         );
         $data['jscript'] = 'functions/check|produksi/main';
         $this->layout->variable($data);
@@ -60,6 +62,9 @@ class Production extends SELF_Controller
             $this->layout->content('produksi/used_list');
         }
         $this->layout->script()->print();
+
+        // var_dump($data['blankodata']['data']);
+        // echo '<textarea>' . $data['blankodata']['data']['query'] . '</textarea>';
     }
 
     private function _index_process()
